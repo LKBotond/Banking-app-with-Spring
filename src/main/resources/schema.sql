@@ -1,0 +1,55 @@
+DROP TABLE IF EXISTS logins CASCADE;
+
+DROP TABLE IF EXISTS users CASCADE;
+
+DROP TABLE IF EXISTS accounts CASCADE;
+
+DROP TABLE IF EXISTS master_record CASCADE;
+
+CREATE TABLE
+    users (
+        id BIGINT GENERATED ALWAYS AS IDENTITY,
+        email TEXT,
+        name_encrypted TEXT,
+        iv TEXT,
+        pass_hash TEXT,
+        registered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT pk_users PRIMARY KEY (id)
+    );
+
+CREATE INDEX idx_email ON users (email);
+
+CREATE TABLE
+    accounts (
+        id BIGINT GENERATED ALWAYS AS IDENTITY,
+        user_id BIGINT,
+        funds NUMERIC(20, 2) DEFAULT 0,
+        CONSTRAINT pk_accounts PRIMARY KEY (id),
+        CONSTRAINT fk_accounts_users FOREIGN KEY (user_id) REFERENCES users (id)
+    );
+
+CREATE INDEX idx_user ON accounts (user_id);
+
+CREATE TABLE
+    logins (
+        user_id BIGINT,
+        login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        logout_time TIMESTAMP,
+        CONSTRAINT fk_logins_users FOREIGN KEY (user_id) REFERENCES users (id)
+    );
+
+CREATE TABLE
+    master_record (
+        id BIGINT GENERATED ALWAYS AS IDENTITY,
+        sender_id BIGINT,
+        receiver_id BIGINT,
+        funds NUMERIC(20, 2),
+        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT pk_master_record PRIMARY KEY (id),
+        CONSTRAINT fk_sender FOREIGN KEY (sender_id) REFERENCES accounts (id),
+        CONSTRAINT fk_receiver FOREIGN KEY (receiver_id) REFERENCES accounts (id)
+    );
+
+CREATE INDEX idx_sender ON master_record (sender_id);
+
+CREATE INDEX idx_receiver ON master_record (receiver_id);
