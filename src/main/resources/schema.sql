@@ -13,7 +13,7 @@ CREATE TABLE
         name_encrypted TEXT,
         iv TEXT,
         pass_hash TEXT,
-        registered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        registered TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT pk_users PRIMARY KEY (id)
     );
 
@@ -47,7 +47,7 @@ CREATE TABLE
         sender_id BIGINT,
         receiver_id BIGINT,
         funds NUMERIC(20, 2),
-        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT pk_master_record PRIMARY KEY (id),
         CONSTRAINT fk_sender FOREIGN KEY (sender_id) REFERENCES accounts (id),
         CONSTRAINT fk_receiver FOREIGN KEY (receiver_id) REFERENCES accounts (id)
