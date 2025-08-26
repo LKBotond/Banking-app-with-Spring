@@ -13,7 +13,6 @@ CREATE TABLE
         id BIGINT GENERATED ALWAYS AS IDENTITY,
         email TEXT,
         name_encrypted TEXT,
-        iv TEXT,
         pass_hash TEXT,
         registered TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT pk_users PRIMARY KEY (id)

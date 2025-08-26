@@ -5,12 +5,20 @@ import java.util.Optional;
 import com.banking.backend.users.User;
 
 public interface UsersDao {
-    void create(User user);
 
     /**
      * 
-     * @param email the registered email
-     * @return returns the stored password hash in String format
+     * @param email
+     * @param nameEncrypted
+     * @param passHash
+     */
+    void create(String email, String nameEncrypted, String passHash);
+
+    /**
+     * 
+     * @param email
+     * @return the stored password hash in String format 
+     * CHECK IF ITS EMPTY
      */
     Optional<String> checkForUserByEmail(String email);
 

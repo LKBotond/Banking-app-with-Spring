@@ -20,14 +20,12 @@ public class UserDaoImpl implements UsersDao {
     }
 
     @Override
-    public void create(User user) {
+    public void create(String email, String nameEncrypted, String passHash) {
 
         jdbcTemplate.update(DBQueries.CREATE_USER,
-                user.getEmail(),
-                user.getEncryptedName(),
-                user.getIV(),
-                user.getPassHash());
-
+                email,
+                nameEncrypted,
+                passHash);
     }
 
     @Override
@@ -61,6 +59,7 @@ public class UserDaoImpl implements UsersDao {
         return jdbcTemplate.queryForObject(DBQueries.GET_SALT, String.class, userID);
     }
 
+    @Override
     public String getIV(long userID) {
         return jdbcTemplate.queryForObject(DBQueries.GET_IV, String.class, userID);
     }
