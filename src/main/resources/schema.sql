@@ -32,9 +32,12 @@ CREATE INDEX idx_user ON accounts (user_id);
 
 CREATE TABLE
     logins (
+        session_id BIGINT GENERATED ALWAYS AS IDENTITY,
         user_id BIGINT,
-        login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        logout_time TIMESTAMP,
+        status BOOLEAN,
+        login_time TIMESTAMPTZ  DEFAULT CURRENT_TIMESTAMP,
+        logout_time TIMESTAMPTZ ,
+        CONSTRAINT pk_session_users PRIMARY KEY (session_id),
         CONSTRAINT fk_logins_users FOREIGN KEY (user_id) REFERENCES users (id)
     );
 

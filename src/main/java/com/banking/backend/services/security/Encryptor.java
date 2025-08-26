@@ -13,7 +13,7 @@ import java.util.Base64;
 @Service
 public class Encryptor {
 
-    // AES-GCM params
+    // AES-GCM param
     private static final int BITLENGTH = 128;
 
     Encryptor() {
