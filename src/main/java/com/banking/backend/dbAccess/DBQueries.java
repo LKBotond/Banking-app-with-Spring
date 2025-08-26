@@ -7,6 +7,9 @@ public final class DBQueries {
     
     public static final String GET_PASS_HASH=SQLFileReader.readSQL("SQL/Business/users/get_pass_hash.sql");
     public static final String GET_USER=SQLFileReader.readSQL("SQL/Business/users/get_user.sql");
+    public static final String GET_IV=SQLFileReader.readSQL("SQL/Business/users/get_iv.sql");
+    public static final String GET_SALT=SQLFileReader.readSQL("SQL/Business/users/get_salt.sql");
+
 
     public static final String GET_ACCOUNT_IDS=SQLFileReader.readSQL("SQL/Business/accounts/get_account_ids.sql");
     public static final String GET_ACCOUNT_BY_ID=SQLFileReader.readSQL("SQL/Business/accounts/get_account_by_id.sql");

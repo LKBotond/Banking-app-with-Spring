@@ -45,6 +45,7 @@ public class UserDaoImpl implements UsersDao {
         try {
             User user = jdbcTemplate.queryForObject(DBQueries.GET_USER, (rs, _) -> new User(
                     rs.getInt("user_id"),
+                    rs.getInt("session_id"),
                     email,
                     rs.getString("name_encrypted"),
                     rs.getString("iv")),
@@ -53,6 +54,15 @@ public class UserDaoImpl implements UsersDao {
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public String getSalt(long userID) {
+        return jdbcTemplate.queryForObject(DBQueries.GET_SALT, String.class, userID);
+    }
+
+    public String getIV(long userID) {
+        return jdbcTemplate.queryForObject(DBQueries.GET_IV, String.class, userID);
     }
 
 }

@@ -16,6 +16,9 @@ public class Argon2KDF {
     private static final int PARALLELISM = 1;
     private static final int KEY_LENGTH_IN_BYTES = 32;
 
+    public Argon2KDF() {
+    };
+
     public char[] charArrayify(Object input) {
         if (input == null) {
             return new char[0];
@@ -29,7 +32,7 @@ public class Argon2KDF {
         return salt;
     }
 
-    public SecretKey deriveKey( char[] passArray, byte[] salt) {
+    public SecretKey deriveKey(char[] passArray, byte[] salt) {
 
         Argon2Parameters.Builder builder = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
                 .withVersion(Argon2Parameters.ARGON2_VERSION_13)

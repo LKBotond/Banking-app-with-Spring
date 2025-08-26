@@ -4,6 +4,8 @@ DROP TABLE IF EXISTS users CASCADE;
 
 DROP TABLE IF EXISTS accounts CASCADE;
 
+DROP TABLE IF EXISTS salts_and_ivs CASCADE;
+
 DROP TABLE IF EXISTS master_record CASCADE;
 
 CREATE TABLE
@@ -35,10 +37,18 @@ CREATE TABLE
         session_id BIGINT GENERATED ALWAYS AS IDENTITY,
         user_id BIGINT,
         status BOOLEAN,
-        login_time TIMESTAMPTZ  DEFAULT CURRENT_TIMESTAMP,
-        logout_time TIMESTAMPTZ ,
+        login_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        logout_time TIMESTAMPTZ,
         CONSTRAINT pk_session_users PRIMARY KEY (session_id),
         CONSTRAINT fk_logins_users FOREIGN KEY (user_id) REFERENCES users (id)
+    );
+
+CREATE TABLE
+    salts_and_ivs (
+        salt TEXT,
+        iv TEXT,
+        user_id BIGINT,
+        constraint fk_this_users (user_id) REFERENCES users (id) constraint pk_user_id PRIMARY KEY (user_id)
     );
 
 CREATE TABLE

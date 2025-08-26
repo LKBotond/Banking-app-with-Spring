@@ -1,6 +1,6 @@
 SELECT
-    id
+    salt
 FROM
-    accounts
+    salts_and_ivs
 WHERE
     user_id = ?

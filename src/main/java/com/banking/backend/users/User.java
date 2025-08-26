@@ -7,25 +7,26 @@ import com.banking.backend.accounts.Account;
 //redesign a bit, tldr, do not need the whole thingy, just the specifics, meaning separate register and login dao and stuff
 
 public class User {
-    private int userID;
+    private long userID;
+    private long sessionID;
     private String email;
     private String encryptedName;
     private String IV;
     private String name;
     private String familyName;
-    private String passHash;
+    private char[] passHash;
     private ArrayList<Account> accounts;
 
-    public User(int user_ID, String email, String encryptedName, String IV) {
+    public User(int user_ID, long sessionID, String email, String encryptedName, String IV) {
         this.userID = user_ID;
+        this.sessionID = sessionID;
         this.email = email;
         this.encryptedName = encryptedName;
         this.IV = IV;
-
     }
 
     public static User empty() {
-        return new User(0, null, null, null);
+        return new User(0, 0, null, null, null);
     }
 
     public void setAccountsForUser(ArrayList<Account> accounts) {
@@ -80,11 +81,15 @@ public class User {
         return this.email;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return this.userID;
     }
 
-    public String getPassHash() {
+    public long getSessionID(){
+        return this.sessionID;
+    }
+
+    public char[] getPassHash() {
         return this.passHash;
     }
 
