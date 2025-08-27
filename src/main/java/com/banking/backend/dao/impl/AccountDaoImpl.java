@@ -18,19 +18,19 @@ public class AccountDaoImpl implements AccountDAO {
     }
 
     @Override
-    public void create(Integer userID) {
+    public void create(long userID) {
         jdbcTemplate.update(DBQueries.CREATE_ACCOUNT, userID);
     }
 
     @Override
-    public ArrayList<Integer> getAccountsByUserID(Integer userID) {
-        return new ArrayList<Integer>(jdbcTemplate.queryForList(DBQueries.GET_ACCOUNT_IDS, Integer.class, userID));
+    public ArrayList<Long> getAccountsByUserID(long userID) {
+        return new ArrayList<Long>(jdbcTemplate.queryForList(DBQueries.GET_ACCOUNT_IDS, Long.class, userID));
     }
 
     @Override
-    public boolean checkForAccountByID(Integer accountID) {
+    public boolean checkForAccountByID(long accountID) {
         try {
-            Integer result = jdbcTemplate.queryForObject(DBQueries.GET_ACCOUNT_BY_ID, Integer.class, accountID);
+            Long result = jdbcTemplate.queryForObject(DBQueries.GET_ACCOUNT_BY_ID, Long.class, accountID);
             return result != null;
         } catch (EmptyResultDataAccessException e) {
             return false;
@@ -38,7 +38,7 @@ public class AccountDaoImpl implements AccountDAO {
     }
 
     @Override
-    public void updateFundsForAccount(Double funds, Integer accountID) {
+    public void updateFundsForAccount(Double funds, long accountID) {
         jdbcTemplate.update(DBQueries.UPDATE_FUNDS_FOR_ACCOUNT_ID, funds, accountID);
     }
 }

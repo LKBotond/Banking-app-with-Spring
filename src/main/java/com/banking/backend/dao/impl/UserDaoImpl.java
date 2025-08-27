@@ -69,6 +69,11 @@ public class UserDaoImpl implements UsersDao {
     }
 
     @Override
+    public String getPassHashByID(long userID) {
+        return jdbcTemplate.queryForObject(DBQueries.GET_PASS_HASH_BY_ID, String.class, userID);
+    }
+
+    @Override
     public String getSalt(long userID) {
         return jdbcTemplate.queryForObject(DBQueries.GET_SALT, String.class, userID);
     }

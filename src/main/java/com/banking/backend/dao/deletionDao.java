@@ -1,6 +1,6 @@
 package com.banking.backend.dao;
 
-public interface deletionDao {
+public interface DeletionDao {
 
     public void deleteUser(long user_id);
 

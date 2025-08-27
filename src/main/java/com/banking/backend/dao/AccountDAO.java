@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public interface AccountDAO {
     
-    void create(Integer userID);
+    void create(long userID);
 
-    ArrayList<Integer> getAccountsByUserID(Integer userID);
+    ArrayList<Long> getAccountsByUserID(long userID);
 
-    boolean checkForAccountByID( Integer accountID);
+    boolean checkForAccountByID( long accountID);
     
-    void updateFundsForAccount(Double funds, Integer accountID);
+    void updateFundsForAccount(Double funds, long accountID);
 
 
 }

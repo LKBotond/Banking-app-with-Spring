@@ -27,6 +27,8 @@ public interface UsersDao {
 
     Optional<Long> getUserIDbyEmail(String email);
 
+    String getPassHashByID(long userID);
+
     String getSalt(long userID);
 
     String getIV(long userID);

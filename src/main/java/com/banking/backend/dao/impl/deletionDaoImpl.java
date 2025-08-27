@@ -1,14 +1,16 @@
 package com.banking.backend.dao.impl;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import com.banking.backend.dao.deletionDao;
+import com.banking.backend.dao.DeletionDao;
 import com.banking.backend.dbAccess.DBQueries;
 
-public class deletionDaoImpl implements deletionDao {
+@Repository
+public class DeletionDaoImpl implements DeletionDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public deletionDaoImpl(JdbcTemplate jdbcTemplate) {
+    public DeletionDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

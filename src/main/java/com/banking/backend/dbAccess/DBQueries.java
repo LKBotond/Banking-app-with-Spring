@@ -6,6 +6,7 @@ public final class DBQueries {
     public static final String CREATE_USER = SQLFileReader.readSQL("SQL/Business/users/create_user.sql");
     
     public static final String GET_PASS_HASH=SQLFileReader.readSQL("SQL/Business/users/get_pass_hash.sql");
+    public static final String GET_PASS_HASH_BY_ID=SQLFileReader.readSQL("SQL/Business/users/get_pass_hash_by_id.sql");
     public static final String GET_USER=SQLFileReader.readSQL("SQL/Business/users/get_user.sql");
     public static final String GET_USER_ID=SQLFileReader.readSQL("SQL/Business/users/get_user_id.sql");
     
