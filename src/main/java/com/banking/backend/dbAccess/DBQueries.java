@@ -27,4 +27,13 @@ public final class DBQueries {
     public static final String GET_RECEIVER_DATA=SQLFileReader.readSQL("SQL/Business/master_record/get_receiver_data.sql");
     public static final String GET_SENDER_DATA=SQLFileReader.readSQL("SQL/Business/master_record/get_sender_data.sql");
     public static final String GET_TRANSACTIONS_BETWEEN_TWO_ACCOUNTS=SQLFileReader.readSQL("SQL/Business/master_record/get_transactions_between_two_accounts.sql");
+    
+    public static final String DELETE_USER=SQLFileReader.readSQL("SQL/Business/deletions/delete_from_user.sql");
+    public static final String DELETE_USER_CRYPTO=SQLFileReader.readSQL("SQL/Business/deletions/delete_from_salts_and_ivs.sql");
+    public static final String DELETE_ACCOUNT=SQLFileReader.readSQL("SQL/Business/deletions/delete_account.sql");
+
+
+
+
+
 }
