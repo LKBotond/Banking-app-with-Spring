@@ -11,8 +11,9 @@ public interface UsersDao {
      * @param email
      * @param nameEncrypted
      * @param passHash
+     * @return user_ID
      */
-    void create(String email, String nameEncrypted, String passHash);
+    Long create(String email, String nameEncrypted, String passHash);
 
     /**
      * 

@@ -2,6 +2,7 @@ package com.banking.backend.dao.impl;
 
 import java.util.Optional;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,12 +21,16 @@ public class UserDaoImpl implements UsersDao {
     }
 
     @Override
-    public void create(String email, String nameEncrypted, String passHash) {
-
-        jdbcTemplate.update(DBQueries.CREATE_USER,
-                email,
-                nameEncrypted,
-                passHash);
+    public Long create(String email, String nameEncrypted, String passHash) {
+        try {
+            return jdbcTemplate.queryForObject(DBQueries.CREATE_USER,
+                    Long.class,
+                    email,
+                    nameEncrypted,
+                    passHash);
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     @Override

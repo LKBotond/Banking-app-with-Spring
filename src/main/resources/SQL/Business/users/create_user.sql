@@ -4,4 +4,5 @@ INSERT INTO
         name_encrypted,   
         pass_hash)
 VALUES
-    (?, ?, ?, ?)
+    (?, ?, ?)
+RETURNING user_id;
