@@ -1,7 +1,5 @@
 SELECT
-    id,
-    name_encrypted,
-    iv
+    id
 FROM
     users
 WHERE

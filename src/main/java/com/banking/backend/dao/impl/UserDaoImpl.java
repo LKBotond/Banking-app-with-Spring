@@ -54,6 +54,15 @@ public class UserDaoImpl implements UsersDao {
         }
     }
 
+    public Optional<Long> getUserIDbyEmail(String email) {
+        try {
+            Long userID = jdbcTemplate.queryForObject(DBQueries.GET_USER_ID, Long.class, email);
+            return Optional.ofNullable(userID);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
     @Override
     public String getSalt(long userID) {
         return jdbcTemplate.queryForObject(DBQueries.GET_SALT, String.class, userID);
