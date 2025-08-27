@@ -11,6 +11,9 @@ public final class DBQueries {
     
     public static final String GET_IV=SQLFileReader.readSQL("SQL/Business/security/get_iv.sql");
     public static final String GET_SALT=SQLFileReader.readSQL("SQL/Business/security/get_salt.sql");
+    public static final String CREATE_USER_FIELD=SQLFileReader.readSQL("SQL/Business/security/create_user_field.sql");
+    public static final String UDATE_SALT=SQLFileReader.readSQL("SQL/Business/security/update_salt.sql");
+    public static final String UPDATE_IV=SQLFileReader.readSQL("SQL/Business/security/update_iv.sql");
 
 
     public static final String GET_ACCOUNT_IDS=SQLFileReader.readSQL("SQL/Business/accounts/get_account_ids.sql");
