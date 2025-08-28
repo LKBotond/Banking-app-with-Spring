@@ -38,6 +38,11 @@ public class AccountDaoImpl implements AccountDAO {
     }
 
     @Override
+    public Double getFundsForAccount(long accountID) {
+        return jdbcTemplate.queryForObject(DBQueries.GET_FUNDS_FOR_ACCOUNT, Double.class, accountID);
+    }
+
+    @Override
     public void updateFundsForAccount(Double funds, long accountID) {
         jdbcTemplate.update(DBQueries.UPDATE_FUNDS_FOR_ACCOUNT_ID, funds, accountID);
     }

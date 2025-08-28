@@ -8,8 +8,10 @@ public interface AccountDAO {
 
     ArrayList<Long> getAccountsByUserID(long userID);
 
-    boolean checkForAccountByID( long accountID);
+    boolean checkForAccountByID(long accountID);
     
+    Double getFundsForAccount(long accountID);
+
     void updateFundsForAccount(Double funds, long accountID);
 
 
