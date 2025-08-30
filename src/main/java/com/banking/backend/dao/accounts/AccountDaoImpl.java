@@ -1,29 +1,34 @@
-package com.banking.backend.dao.impl;
+package com.banking.backend.dao.accounts;
 
 import java.util.ArrayList;
+
+import org.springframework.jdbc.core.RowMapper;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.banking.backend.dao.AccountDAO;
+import com.banking.backend.accounts.Account;
+import com.banking.backend.dao.BaseDaoImpl;
 import com.banking.backend.dbAccess.DBQueries;
 
 @Repository
-public class AccountDaoImpl implements AccountDAO {
-    private final JdbcTemplate jdbcTemplate;
+public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
 
     public AccountDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        super(jdbcTemplate);
     }
 
     @Override
     public void create(long userID) {
-        jdbcTemplate.update(DBQueries.CREATE_ACCOUNT, userID);
+        addData(DBQueries.CREATE_ACCOUNT, userID);
     }
 
+    //return account without the row mapper, user it within
     @Override
-    public ArrayList<Long> getAccountsByUserID(long userID) {
+    @Transactional
+    public Account getAccountsByUserID(long userID) {
         return new ArrayList<Long>(jdbcTemplate.queryForList(DBQueries.GET_ACCOUNT_IDS, Long.class, userID));
     }
 

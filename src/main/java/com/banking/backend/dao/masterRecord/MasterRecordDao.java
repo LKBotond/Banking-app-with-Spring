@@ -1,4 +1,4 @@
-package com.banking.backend.dao;
+package com.banking.backend.dao.masterRecord;
 
 import java.util.Optional;
 import java.util.List;

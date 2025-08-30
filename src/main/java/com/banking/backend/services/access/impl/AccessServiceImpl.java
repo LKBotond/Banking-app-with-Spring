@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.backend.services.security.AuthenticationService;
-import com.banking.backend.dao.AccountDAO;
-import com.banking.backend.dao.DeletionDao;
-import com.banking.backend.dao.LoginDao;
-import com.banking.backend.dao.SaltsAndIvsDao;
-import com.banking.backend.dao.UsersDao;
+import com.banking.backend.dao.accounts.AccountDAO;
+import com.banking.backend.dao.deletion.DeletionDao;
+import com.banking.backend.dao.logins.LoginDao;
+import com.banking.backend.dao.saltsAndIVs.SaltsAndIvsDao;
+import com.banking.backend.dao.users.UsersDao;
 import com.banking.backend.services.access.AccessService;
 import com.banking.backend.services.security.Argon2KDF;
 import com.banking.backend.services.security.Encryptor;

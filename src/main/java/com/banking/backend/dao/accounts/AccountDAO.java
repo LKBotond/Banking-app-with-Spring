@@ -1,18 +1,19 @@
-package com.banking.backend.dao;
+package com.banking.backend.dao.accounts;
 
-import java.util.ArrayList;
+
+
+import com.banking.backend.accounts.Account;
 
 public interface AccountDAO {
-    
+
     void create(long userID);
 
-    ArrayList<Long> getAccountsByUserID(long userID);
+    Account getAccountsByUserID(long userID);
 
     boolean checkForAccountByID(long accountID);
-    
+
     Double getFundsForAccount(long accountID);
 
     void updateFundsForAccount(Double funds, long accountID);
-
 
 }

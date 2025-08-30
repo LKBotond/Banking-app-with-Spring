@@ -1,4 +1,4 @@
-package com.banking.backend.dao.impl;
+package com.banking.backend.dao.logins;
 
 import java.util.Optional;
 
@@ -6,7 +6,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.banking.backend.dao.LoginDao;
 import com.banking.backend.dbAccess.DBQueries;
 
 @Repository

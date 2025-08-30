@@ -1,4 +1,4 @@
-package com.banking.backend.dao;
+package com.banking.backend.dao.users;
 
 import java.util.Optional;
 

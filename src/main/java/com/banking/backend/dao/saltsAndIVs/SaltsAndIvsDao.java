@@ -1,4 +1,4 @@
-package com.banking.backend.dao;
+package com.banking.backend.dao.saltsAndIVs;
 
 public interface SaltsAndIvsDao {
     public String getSalt(long userID);

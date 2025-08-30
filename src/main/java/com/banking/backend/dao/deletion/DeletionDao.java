@@ -1,4 +1,4 @@
-package com.banking.backend.dao;
+package com.banking.backend.dao.deletion;
 
 public interface DeletionDao {
 

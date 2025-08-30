@@ -1,4 +1,4 @@
-package com.banking.backend.dao.impl;
+package com.banking.backend.dao.masterRecord;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.banking.backend.dao.MasterRecordDao;
 import com.banking.backend.dbAccess.DBQueries;
 
 @Repository
