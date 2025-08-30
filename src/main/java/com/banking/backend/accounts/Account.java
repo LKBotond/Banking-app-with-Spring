@@ -1,29 +1,37 @@
 package com.banking.backend.accounts;
 
-public class Account {
-    private int accountID;
-    private int funds;
+import java.math.BigDecimal;
 
-    public Account(int accountID, int funds) {
+public class Account {
+    private long accountID;
+    private BigDecimal funds;
+
+    public Account(long accountID, BigDecimal funds) {
         this.accountID = accountID;
         this.funds = funds;
     }
 
-    public int getBalance() {
+    public BigDecimal getBalance() {
         return funds;
     }
 
-    public int getAccounID() {
+    public long getAccounID() {
         return accountID;
     }
 
-    public void addToFunds(int amounth) {
-        funds += amounth;
+    public void addToFunds(BigDecimal amount) {
+        if (amount == null) {
+            throw new IllegalArgumentException("Amount cannot be null");
+        }
+        funds = funds.add(amount);
     }
 
-    public boolean subtractFromFunds(int amount) {
-        if (funds >= amount) {
-            funds -= amount;
+    public boolean subtractFromFunds(BigDecimal amount) {
+        if (amount == null) {
+            throw new IllegalArgumentException("Amount cannot be null");
+        }
+        if (funds.compareTo(amount) > 0) {
+            funds = funds.subtract(amount);
             return true;
         }
         return false;

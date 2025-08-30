@@ -1,6 +1,8 @@
 package com.banking.backend.dao.accounts;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -25,10 +27,18 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
         addData(DBQueries.CREATE_ACCOUNT, userID);
     }
 
-    //return account without the row mapper, user it within
+    public Optional<Account> getAccountByID(long accountID) {
+        Optional<BigDecimal> potential = getScalar(DBQueries.GET_FUNDS_FOR_ACCOUNT, BigDecimal.class, userID);
+        if (potential.isEmpty()) {
+            Optional.empty();
+        }
+        return Optional.of(new Account(accountID, potential.get()));
+    }
+
+    // return account without the row mapper, user it within
     @Override
     @Transactional
-    public Account getAccountsByUserID(long userID) {
+    public Optional<ArrayList<Account>> getAccountsByUserID(long userID) {
         return new ArrayList<Long>(jdbcTemplate.queryForList(DBQueries.GET_ACCOUNT_IDS, Long.class, userID));
     }
 
@@ -43,7 +53,7 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
     }
 
     @Override
-    public Double getFundsForAccount(long accountID) {
+    public BigDecimal getFundsForAccount(long accountID) {
         return jdbcTemplate.queryForObject(DBQueries.GET_FUNDS_FOR_ACCOUNT, Double.class, accountID);
     }
 
