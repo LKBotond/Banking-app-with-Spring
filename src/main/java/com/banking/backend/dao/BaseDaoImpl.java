@@ -22,6 +22,10 @@ public abstract class BaseDaoImpl {
         }
     }
 
+    protected <T> List<T> getSingleColumnList(String sql, Class<T> type, Object... params) {
+        return jdbcTemplate.queryForList(sql, type, params);
+    }
+
     protected void addData(String sql, Object... params) {
         jdbcTemplate.update(sql, params);
     }

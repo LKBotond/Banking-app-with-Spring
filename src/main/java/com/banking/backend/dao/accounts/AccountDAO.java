@@ -1,7 +1,7 @@
 package com.banking.backend.dao.accounts;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.banking.backend.accounts.Account;
@@ -12,7 +12,9 @@ public interface AccountDAO {
 
     Optional<Account> getAccountByID(long accountID);
 
-    Optional<ArrayList<Account>>getAccountsByUserID(long userID);
+    List<Long> getAccountIdsForUser(long userID);
+
+    List<Account> getAccountsByUserID(long userID);
 
     boolean checkForAccountByID(long accountID);
 
