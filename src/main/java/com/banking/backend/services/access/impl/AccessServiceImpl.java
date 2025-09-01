@@ -1,8 +1,7 @@
 package com.banking.backend.services.access.impl;
 
-import java.util.ArrayList;
 import java.util.Base64;
-
+import java.util.List;
 import java.util.Optional;
 
 import javax.crypto.SecretKey;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.backend.services.security.AuthenticationService;
 import com.banking.backend.dao.accounts.AccountDAO;
+import com.banking.backend.accounts.Account;
 import com.banking.backend.dao.deletion.DeletionDao;
 import com.banking.backend.dao.logins.LoginDao;
 import com.banking.backend.dao.saltsAndIVs.SaltsAndIvsDao;
@@ -19,7 +19,6 @@ import com.banking.backend.dao.users.UsersDao;
 import com.banking.backend.services.access.AccessService;
 import com.banking.backend.services.security.Argon2KDF;
 import com.banking.backend.services.security.Encryptor;
-
 
 @Service
 public class AccessServiceImpl implements AccessService {
@@ -108,9 +107,9 @@ public class AccessServiceImpl implements AccessService {
         if (!authenticationService.verifyPass(passOnRecord, password)) {
             throw new RuntimeException("Invalid password my friend");
         }
-        ArrayList<Long> accounts = accountDao.getAccountsByUserID(userID);
-        for (long account : accounts) {
-            deletionDao.deleteAccount(account);
+        List<Account> accounts = accountDao.getAccountsByUserID(userID);
+        for (Account account : accounts) {
+            deletionDao.deleteAccount(account.getAccounID());
         }
         deletionDao.deleteUserCrypto(userID);
         deletionDao.deleteUser(userID);
