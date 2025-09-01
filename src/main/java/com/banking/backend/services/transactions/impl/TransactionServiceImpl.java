@@ -1,10 +1,14 @@
 package com.banking.backend.services.transactions.impl;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.backend.dao.accounts.AccountDAO;
 import com.banking.backend.dao.masterRecord.MasterRecordDao;
+import com.banking.backend.domain.accounts.Account;
 import com.banking.backend.services.transactions.TransactionService;
 
 @Service
@@ -18,33 +22,34 @@ public class TransactionServiceImpl implements TransactionService {
         this.masterRecordDao = masterRecordDao;
     }
 
-    @Override
-    public boolean addToAccount(double funds, long accountID) {
-        Double fundsOnRecord = accountDAO.getFundsForAccount(accountID);
-        if (fundsOnRecord == null) {
-            return false;
+    private void updateBalance(long accountID, BigDecimal funds) {
+        Optional<Account> potentialAccount = accountDAO.getAccountByID(accountID);
+        if (potentialAccount.isEmpty()) {
+            throw new RuntimeException("Account not found: " + accountID);
         }
-        double sum = fundsOnRecord + funds;
-        accountDAO.updateFundsForAccount(sum, accountID);
-        return true;
+        Account account = potentialAccount.get();
+        BigDecimal balance = account.getBalance().add(funds);
+        if (balance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("Insufficient funds for account: " + accountID);
+        }
+        accountDAO.updateFundsForAccount(balance, account.getAccounID());
     }
 
     @Override
-    public boolean subtractFromAccount(double funds, long accountID) {
-        Double fundsOnRecord = accountDAO.getFundsForAccount(accountID);
-        if (fundsOnRecord == null) {
-            return false;
-        }
-        double remainingBalance = fundsOnRecord - funds;
-        if (remainingBalance < 0) {
-            return false;
-        }
-        accountDAO.updateFundsForAccount(remainingBalance, accountID);
-        return true;
+    public void transaction(long senderID, long receiverID, BigDecimal funds) {
+        updateBalance(senderID, funds.negate());
+
+        updateBalance(receiverID, funds);
+        masterRecordDao.recordTransfer(senderID, receiverID, funds);
     }
 
     @Override
-    public boolean transaction(double funds, long sender, long receiver) {
-        return false;
+    public void deposit(long accountID, BigDecimal fubnds) {
+
+    }
+
+    @Override
+    public void withdraw(long accountID, BigDecimal fubnds) {
+        
     }
 }

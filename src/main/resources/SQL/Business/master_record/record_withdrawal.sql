@@ -5,4 +5,4 @@ INSERT INTO
         funds,
         transaction_type)
 VALUES
-    (?, ?, ?, 'TRANSFER')
+    (?, NULL, ?, 'WITHDRAWAL');

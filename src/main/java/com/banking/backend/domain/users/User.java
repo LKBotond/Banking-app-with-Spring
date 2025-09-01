@@ -1,8 +1,8 @@
-package com.banking.backend.users;
+package com.banking.backend.domain.users;
 
 import java.util.ArrayList;
 
-import com.banking.backend.accounts.Account;
+import com.banking.backend.domain.accounts.Account;
 
 //redesign a bit, tldr, do not need the whole thingy, just the specifics, meaning separate register and login dao and stuff
 

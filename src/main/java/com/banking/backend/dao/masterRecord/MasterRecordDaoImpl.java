@@ -1,22 +1,29 @@
 package com.banking.backend.dao.masterRecord;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+import com.banking.backend.dao.BaseDaoImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.banking.backend.dbAccess.DBQueries;
+import com.banking.backend.domain.accounts.Account;
 
 @Repository
-public class MasterRecordDaoImpl implements MasterRecordDao {
-
-    private final JdbcTemplate jdbcTemplate;
+public class MasterRecordDaoImpl extends BaseDaoImpl implements MasterRecordDao {
 
     public MasterRecordDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        super(jdbcTemplate);
     }
+
+    /*
+     * private RowMapper<Account> masterRecordRowMapper() {
+     * 
+     * }
+     */
 
     @Override
     public Optional<List<Map<String, Object>>> getReceiverData(long receiverID) {
@@ -38,7 +45,18 @@ public class MasterRecordDaoImpl implements MasterRecordDao {
     }
 
     @Override
-    public void recordTransfer(long senderID, long receiverID, long funds) {
+    public void recordTransfer(long senderID, long receiverID, BigDecimal funds) {
         jdbcTemplate.update(DBQueries.RECORD_TRANSFER, senderID, receiverID, funds);
     }
+
+    @Override
+    public void recordDeposit(long receiverID, BigDecimal funds) {
+        jdbcTemplate.update(DBQueries.RECORD_DEPOSIT, receiverID, funds);
+    }
+
+    @Override
+    public void recordWithdrawal(long senderID, BigDecimal funds) {
+        jdbcTemplate.update(DBQueries.RECORD_WITHDRAWAL, senderID, funds);
+    }
+
 }

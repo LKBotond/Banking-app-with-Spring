@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.banking.backend.dbAccess.DBQueries;
-import com.banking.backend.users.User;
+import com.banking.backend.domain.users.User;
 
 @Repository
 public class UserDaoImpl implements UsersDao {

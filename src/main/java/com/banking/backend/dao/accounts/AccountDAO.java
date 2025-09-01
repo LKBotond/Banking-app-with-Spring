@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import com.banking.backend.accounts.Account;
+import com.banking.backend.domain.accounts.Account;
 
 public interface AccountDAO {
 
@@ -20,6 +20,6 @@ public interface AccountDAO {
 
     BigDecimal getFundsForAccount(long accountID);
 
-    void updateFundsForAccount(Double funds, long accountID);
+    void updateFundsForAccount(BigDecimal funds, long accountID);
 
 }

@@ -8,6 +8,10 @@ DROP TABLE IF EXISTS salts_and_ivs CASCADE;
 
 DROP TABLE IF EXISTS master_record CASCADE;
 
+DROP TYPE IF EXISTS transaction_type;
+
+CREATE TYPE transaction_type AS ENUM ('DEPOSIT', 'WITHDRAWAL', 'TRANSFER');
+
 CREATE TABLE
     users (
         id BIGINT GENERATED ALWAYS AS IDENTITY,
@@ -54,9 +58,10 @@ CREATE TABLE
     master_record (
         id BIGINT GENERATED ALWAYS AS IDENTITY,
         sender_id BIGINT,
+        transaction_type transaction_type NOT NULL,
         receiver_id BIGINT,
         funds NUMERIC(20, 2),
-        date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        transaction_date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT pk_master_record PRIMARY KEY (id),
         CONSTRAINT fk_sender FOREIGN KEY (sender_id) REFERENCES accounts (id),
         CONSTRAINT fk_receiver FOREIGN KEY (receiver_id) REFERENCES accounts (id)

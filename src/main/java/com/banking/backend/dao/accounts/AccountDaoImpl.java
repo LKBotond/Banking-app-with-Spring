@@ -11,9 +11,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.banking.backend.accounts.Account;
 import com.banking.backend.dao.BaseDaoImpl;
 import com.banking.backend.dbAccess.DBQueries;
+import com.banking.backend.domain.accounts.Account;
 
 @Repository
 @Transactional
@@ -70,7 +70,7 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
     }
 
     @Override
-    public void updateFundsForAccount(Double funds, long accountID) {
+    public void updateFundsForAccount(BigDecimal funds, long accountID) {
         jdbcTemplate.update(DBQueries.UPDATE_FUNDS_FOR_ACCOUNT_ID, funds, accountID);
     }
 }

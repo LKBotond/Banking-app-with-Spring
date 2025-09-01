@@ -2,7 +2,7 @@ package com.banking.backend.dao.users;
 
 import java.util.Optional;
 
-import com.banking.backend.users.User;
+import com.banking.backend.domain.users.User;
 
 public interface UsersDao {
 

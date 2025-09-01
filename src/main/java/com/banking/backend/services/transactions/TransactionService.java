@@ -1,11 +1,13 @@
 package com.banking.backend.services.transactions;
 
+import java.math.BigDecimal;
+
 public interface TransactionService {
 
-    public boolean addToAccount(double funds, long accountID);
+    public void transaction(long senderID, long receiverID, BigDecimal funds);
 
-    public boolean subtractFromAccount(double funds, long accountID);
+    public void deposit(long accountID, BigDecimal fubnds);
 
-    public boolean transaction(double funds, long sender, long receiver);
+    public void withdraw(long accountID, BigDecimal fubnds);
 
 }

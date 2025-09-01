@@ -1,4 +1,4 @@
-package com.banking.backend.accounts;
+package com.banking.backend.domain.accounts;
 
 import java.math.BigDecimal;
 
