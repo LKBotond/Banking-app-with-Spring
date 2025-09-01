@@ -1,18 +1,19 @@
 package com.banking.backend.dao.masterRecord;
 
-import java.util.Optional;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
+import com.banking.backend.domain.masterRecord.MasterRecord;
 
 public interface MasterRecordDao {
-    Optional<List<Map<String, Object>>> getReceiverData(long receiverID);
+    List<MasterRecord> getReceiverData(long receiverID, int limit, int offset);
 
-    Optional<List<Map<String, Object>>> getSenderData(long senderID);
+    List<MasterRecord> getSenderData(long senderID, int limit, int offset);
 
-    Optional<List<Map<String, Object>>> getTransactionData(long senderID, long receiverID);
+    List<MasterRecord> getTransactionData(long senderID, long receiverID, int limit, int offset);
 
     void recordTransfer(long senderID, long receiverID, BigDecimal funds);
+
     void recordDeposit(long receiverID, BigDecimal funds);
+
     void recordWithdrawal(long senderID, BigDecimal funds);
 }

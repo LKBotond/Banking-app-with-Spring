@@ -58,8 +58,8 @@ CREATE TABLE
     master_record (
         id BIGINT GENERATED ALWAYS AS IDENTITY,
         sender_id BIGINT,
-        transaction_type transaction_type NOT NULL,
         receiver_id BIGINT,
+        transaction_type transaction_type NOT NULL,
         funds NUMERIC(20, 2),
         transaction_date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT pk_master_record PRIMARY KEY (id),

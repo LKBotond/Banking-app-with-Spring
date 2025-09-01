@@ -1,6 +1,7 @@
 package com.banking.backend.dao.masterRecord;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,7 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.banking.backend.dbAccess.DBQueries;
-import com.banking.backend.domain.accounts.Account;
+import com.banking.backend.domain.masterRecord.MasterRecord;
 
 @Repository
 public class MasterRecordDaoImpl extends BaseDaoImpl implements MasterRecordDao {
@@ -19,29 +20,30 @@ public class MasterRecordDaoImpl extends BaseDaoImpl implements MasterRecordDao 
         super(jdbcTemplate);
     }
 
-    /*
-     * private RowMapper<Account> masterRecordRowMapper() {
-     * 
-     * }
-     */
-
-    @Override
-    public Optional<List<Map<String, Object>>> getReceiverData(long receiverID) {
-        List<Map<String, Object>> resultset = jdbcTemplate.queryForList(DBQueries.GET_RECEIVER_DATA, receiverID);
-        return resultset.isEmpty() ? Optional.empty() : Optional.of(resultset);
+    private RowMapper<MasterRecord> masterRecordRowMapper() {
+        return (rs, _) -> new MasterRecord(
+                rs.getLong("id"),
+                rs.getLong("sender_id"),
+                rs.getLong("receiver_id"),
+                rs.getString("transaction_type"),
+                rs.getBigDecimal("funds"),
+                rs.getObject("transaction_date", OffsetDateTime.class));
     }
 
     @Override
-    public Optional<List<Map<String, Object>>> getSenderData(long senderID) {
-        List<Map<String, Object>> resultset = jdbcTemplate.queryForList(DBQueries.GET_SENDER_DATA, senderID);
-        return resultset.isEmpty() ? Optional.empty() : Optional.of(resultset);
+    public List<MasterRecord> getReceiverData(long receiverID, int limit, int offset) {
+        return getResultList(DBQueries.GET_RECEIVER_DATA, masterRecordRowMapper(), receiverID, limit, offset);
     }
 
     @Override
-    public Optional<List<Map<String, Object>>> getTransactionData(long senderID, long receiverID) {
-        List<Map<String, Object>> resultset = jdbcTemplate.queryForList(DBQueries.GET_TRANSACTIONS_DATA, senderID,
-                receiverID);
-        return resultset.isEmpty() ? Optional.empty() : Optional.of(resultset);
+    public List<MasterRecord> getSenderData(long senderID, int limit, int offset) {
+        return getResultList(DBQueries.GET_SENDER_DATA, masterRecordRowMapper(), senderID, limit, offset);
+    }
+
+    @Override
+    public List<MasterRecord> getTransactionData(long senderID, long receiverID, int limit, int offset) {
+        return getResultList(DBQueries.GET_TRANSACTIONS_DATA, masterRecordRowMapper(), senderID, receiverID, limit,
+                offset);
     }
 
     @Override
