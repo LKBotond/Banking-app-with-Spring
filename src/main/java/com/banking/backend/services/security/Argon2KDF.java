@@ -5,10 +5,12 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
+import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
 
+@Service
 public class Argon2KDF {
 
     private static final int ITERATIONS = 10;

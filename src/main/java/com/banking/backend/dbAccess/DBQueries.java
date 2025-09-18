@@ -34,7 +34,7 @@ public final class DBQueries {
     public static final String RECORD_WITHDRAWAL = SQLFileReader.readSQL("SQL/Business/master_record/record_withdrawal.sql");
 
 
-    public static final String DELETE_USER = SQLFileReader.readSQL("SQL/Business/deletions/delete_from_user.sql");
+    public static final String DELETE_USER = SQLFileReader.readSQL("SQL/Business/deletions/delete_from_users.sql");
     public static final String DELETE_USER_CRYPTO = SQLFileReader.readSQL("SQL/Business/deletions/delete_from_salts_and_ivs.sql");
     public static final String DELETE_ACCOUNT = SQLFileReader.readSQL("SQL/Business/deletions/delete_account.sql");
 

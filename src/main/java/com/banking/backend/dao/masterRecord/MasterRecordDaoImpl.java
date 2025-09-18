@@ -3,8 +3,6 @@ package com.banking.backend.dao.masterRecord;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import com.banking.backend.dao.BaseDaoImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

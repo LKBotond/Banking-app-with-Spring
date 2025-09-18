@@ -51,7 +51,8 @@ CREATE TABLE
         salt TEXT,
         iv TEXT,
         user_id BIGINT,
-        constraint fk_this_users (user_id) REFERENCES users (id) constraint pk_user_id PRIMARY KEY (user_id)
+        constraint fk_this_users FOREIGN KEY (user_id) REFERENCES users (id),
+        constraint pk_user_id PRIMARY KEY (user_id)
     );
 
 CREATE TABLE
