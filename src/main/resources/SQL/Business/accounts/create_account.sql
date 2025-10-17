@@ -1,4 +1,0 @@
-INSERT INTO
-    accounts (user_id)
-VALUES
-    (?);
