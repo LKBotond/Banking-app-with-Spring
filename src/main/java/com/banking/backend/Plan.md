@@ -12,7 +12,7 @@
 
 1.  PostgreSQL setup:
     - [x] Configure Application Properties
-    - [ ] Create Schema
+    - [x] Create Schema
     - [ ] Create SQL queries for Said Schema
 2.  DAO Setup:
     - [ ] Create SQL FileReader (.SQL -> String)
