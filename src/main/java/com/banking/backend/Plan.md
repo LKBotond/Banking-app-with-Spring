@@ -15,7 +15,7 @@
     - [x] Create Schema
     - [x] Create SQL queries for Said Schema
 2.  DAO Setup:
-    - [ ] Create SQL FileReader (.SQL -> String)
+    - [x] Create SQL FileReader (.SQL -> String)
     - [ ] Create a static aggregator class to store the SQL Strings
     - [ ] Configure JDBCTemplate
     - [ ] Create DAOs for necessary DB operations
