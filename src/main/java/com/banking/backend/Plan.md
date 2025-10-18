@@ -11,9 +11,9 @@
 ### Create DB:
 
 1.  PostgreSQL setup:
-    - [ ] Configure Application Properties
-    - [ ] Create Schema
-    - [ ] Create SQL queries for Said Schema
+    - [x] Configure Application Properties
+    - [x] Create Schema
+    - [x] Create SQL queries for Said Schema
 2.  DAO Setup:
     - [ ] Create SQL FileReader (.SQL -> String)
     - [ ] Create a static aggregator class to store the SQL Strings
