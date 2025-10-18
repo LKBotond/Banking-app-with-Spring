@@ -10,9 +10,9 @@
 
 ### Create DB:
 
-1.  Postgresql setup:
-    - [x] Configure Application Properties
-    - [x] Create Schema
+1.  PostgreSQL setup:
+    - [ ] Configure Application Properties
+    - [ ] Create Schema
     - [ ] Create SQL queries for Said Schema
 2.  DAO Setup:
     - [ ] Create SQL FileReader (.SQL -> String)
