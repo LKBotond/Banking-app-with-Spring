@@ -11,7 +11,7 @@
 ### Create DB:
 
 1.  PostgreSQL setup:
-    - [ ] Configure Application Properties
+    - [x] Configure Application Properties
     - [ ] Create Schema
     - [ ] Create SQL queries for Said Schema
 2.  DAO Setup:
