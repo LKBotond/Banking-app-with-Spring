@@ -1,8 +1,4 @@
 INSERT INTO
-    users (
-        email,
-        name_encrypted,   
-        pass_hash)
+    users (email, name_encrypted, salt, iv, pass_hash)
 VALUES
-    (?, ?, ?)
-RETURNING user_id;
+    (?, ?, ?, ?, ?) RETURNING user_id;

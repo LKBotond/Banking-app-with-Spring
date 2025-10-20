@@ -17,6 +17,8 @@ CREATE TABLE
         id BIGINT GENERATED ALWAYS AS IDENTITY,
         email TEXT,
         name_encrypted TEXT,
+        salt TEXT,
+        iv TEXT,
         pass_hash TEXT,
         registered TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT pk_users PRIMARY KEY (id)
@@ -46,14 +48,6 @@ CREATE TABLE
         CONSTRAINT fk_logins_users FOREIGN KEY (user_id) REFERENCES users (id)
     );
 
-CREATE TABLE
-    salts_and_ivs (
-        salt TEXT,
-        iv TEXT,
-        user_id BIGINT,
-        constraint fk_this_users FOREIGN KEY (user_id) REFERENCES users (id),
-        constraint pk_user_id PRIMARY KEY (user_id)
-    );
 
 CREATE TABLE
     master_record (

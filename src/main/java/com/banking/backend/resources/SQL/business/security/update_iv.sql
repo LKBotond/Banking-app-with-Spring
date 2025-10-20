@@ -1,4 +1,4 @@
-UPDATE salts_and_ivs
+UPDATE users
 SET
     IV = ?
 WHERE
