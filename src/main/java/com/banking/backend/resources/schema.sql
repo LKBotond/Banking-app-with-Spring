@@ -14,14 +14,14 @@ CREATE TYPE transaction_type AS ENUM ('DEPOSIT', 'WITHDRAWAL', 'TRANSFER');
 
 CREATE TABLE
     users (
-        id BIGINT GENERATED ALWAYS AS IDENTITY,
+        user_id BIGINT GENERATED ALWAYS AS IDENTITY,
         email TEXT,
         name_encrypted TEXT,
         salt TEXT,
         iv TEXT,
         pass_hash TEXT,
         registered TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT pk_users PRIMARY KEY (id)
+        CONSTRAINT pk_users PRIMARY KEY (user_id)
     );
 
 CREATE INDEX idx_email ON users (email);
@@ -32,7 +32,7 @@ CREATE TABLE
         user_id BIGINT,
         funds NUMERIC(20, 2) DEFAULT 0,
         CONSTRAINT pk_accounts PRIMARY KEY (id),
-        CONSTRAINT fk_accounts_users FOREIGN KEY (user_id) REFERENCES users (id)
+        CONSTRAINT fk_accounts_users FOREIGN KEY (user_id) REFERENCES users (user_id)
     );
 
 CREATE INDEX idx_user ON accounts (user_id);
@@ -45,7 +45,7 @@ CREATE TABLE
         login_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         logout_time TIMESTAMPTZ,
         CONSTRAINT pk_session_users PRIMARY KEY (session_id),
-        CONSTRAINT fk_logins_users FOREIGN KEY (user_id) REFERENCES users (id)
+        CONSTRAINT fk_logins_users FOREIGN KEY (user_id) REFERENCES users (user_id)
     );
 
 
