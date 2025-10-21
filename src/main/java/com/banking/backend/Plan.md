@@ -19,7 +19,7 @@
     - [x] Create SQL FileReader (.SQL -> String)
     - [x] Create a static aggregator class to store the SQL Strings
     - [x] Configure JDBCTemplate
-    - [ ] Create DAOs for necessary DB operations
+    - [x] Create DAOs for necessary DB operations
     - [ ] Create domain objects for service level data transfer
     - [ ] Create DTOs for requests
 
