@@ -1,0 +1,33 @@
+package com.banking.backend.dao.sessions;
+
+import java.util.Optional;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import com.banking.backend.dao.BaseDaoImpl;
+import com.banking.backend.dbAccess.DBQueries;
+
+@Repository
+public class ActiveSessionsDaoImpl extends BaseDaoImpl implements ActiveSessionsDao {
+
+    public ActiveSessionsDaoImpl(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
+
+    public Optional<Long> getNumberOfActiveUsers() {
+        return getScalar(DBQueries.GET_NUMBER_OF_CURRENTLY_ACTIVE_USERS, Long.class);
+    }
+
+    public Optional<Long> getUsersLoginId(String sessionId) {
+        return getScalar(DBQueries.GET_LOGIN_ID, Long.class, sessionId);
+    }
+
+    public void addActiveSession(String sessionId, long loginId) {
+        addData(DBQueries.ADD_SESSION, loginId, sessionId);
+    }
+
+    public void deleteActiveSession(String sessionId) {
+        jdbcTemplate.update(DBQueries.DELETE_SESSION, sessionId);
+    }
+}
