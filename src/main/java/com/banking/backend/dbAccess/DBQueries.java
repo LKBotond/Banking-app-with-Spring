@@ -47,4 +47,6 @@ public final class DBQueries {
     public static final String DELETE_ACCOUNT = SQLFileReader.readSQL("SQL/Business/deletions/delete_account.sql");
     public static final String DELETE_SESSION = SQLFileReader.readSQL("SQL/Business/deletions/delete_session.sql");
 
+    //COMPLEX QUERIES JOINS AND ALL THAT:
+    public static final String GET_USER_ID_BY_SESSION_ID = SQLFileReader.readSQL("SQL/Business/complex/join_users_on_session.sql");
 }

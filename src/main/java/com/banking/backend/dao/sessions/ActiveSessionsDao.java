@@ -8,6 +8,8 @@ public interface ActiveSessionsDao {
 
     Optional<Long> getUsersLoginId(String sessionId);
 
+    Optional<Long> getUserIdbySessionId(String sessionToken);
+
     void addActiveSession(String sessionId, long loginId);
 
     void deleteActiveSession(String sessionId);

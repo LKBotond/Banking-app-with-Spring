@@ -23,6 +23,10 @@ public class ActiveSessionsDaoImpl extends BaseDaoImpl implements ActiveSessions
         return getScalar(DBQueries.GET_LOGIN_ID, Long.class, sessionId);
     }
 
+    public Optional<Long> getUserIdbySessionId(String sessionToken) {
+        return getScalar(DBQueries.GET_USER_ID_BY_SESSION_ID, Long.class, sessionToken);
+    }
+
     public void addActiveSession(String sessionId, long loginId) {
         addData(DBQueries.ADD_SESSION, loginId, sessionId);
     }

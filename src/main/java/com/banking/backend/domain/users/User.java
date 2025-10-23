@@ -2,19 +2,25 @@ package com.banking.backend.domain.users;
 
 import java.util.ArrayList;
 
-import com.banking.backend.Legacy.domain.accounts.Account;
+import com.banking.backend.domain.accounts.Account;
+import lombok.Data;
 
-//redesign a bit, tldr, do not need the whole thingy, just the specifics, meaning separate register and login dao and stuff
-
+@Data
 public class User {
+    // Identifications
     private long userID;
     private String email;
-    private String encryptedName;
+
+    // Security
+    private String passHash;
     private String IV;
+    private String salt;
+
+    // Name
+    private String encryptedName;
     private String name;
     private String familyName;
-    private char[] passHash;
-    private ArrayList<Account> accounts;
+    private ArrayList<Account> accounts = new ArrayList<>();
 
     /**
      * Creates a user domain object
@@ -22,25 +28,13 @@ public class User {
      * Note: The {@code accounts} field remains uninitialized and must be set
      * afterward.
      */
-    public User(int userID, String email, String encryptedName, String IV) {
+    public User(long userID, String email, String encryptedName, String salt, String IV, String passHash) {
         this.userID = userID;
         this.email = email;
         this.encryptedName = encryptedName;
+        this.salt = salt;
         this.IV = IV;
-    }
-
-    /**
-     * Creates an empty user domain object
-     */
-    public static User empty() {
-        return new User(0, null, null, null);
-    }
-
-    /**
-     * Sets the {@code accounts} field for the User domain object
-     */
-    public void setAccountsForUser(ArrayList<Account> accounts) {
-        this.accounts = accounts;
+        this.passHash = passHash;
     }
 
     /**
@@ -61,7 +55,7 @@ public class User {
 
     public Account getAccountByID(int accountID) {
         for (Account account : accounts) {
-            if (account.getAccounID() == accountID) {
+            if (account.getAccountID() == accountID) {
                 return account;
             }
         }
@@ -86,34 +80,6 @@ public class User {
             this.familyName = "";
         }
 
-    }
-
-    public String getEncryptedName() {
-        return this.encryptedName;
-    }
-
-    public String getIV() {
-        return this.IV;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getFamilyName() {
-        return this.familyName;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public long getUserId() {
-        return this.userID;
-    }
-
-    public char[] getPassHash() {
-        return this.passHash;
     }
 
 }

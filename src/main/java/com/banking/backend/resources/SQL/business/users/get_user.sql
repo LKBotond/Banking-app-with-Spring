@@ -1,7 +1,9 @@
 SELECT
     user_id,
     name_encrypted,
-    iv
+    salt,
+    iv,
+    pass_hash
 FROM
     users
 WHERE
