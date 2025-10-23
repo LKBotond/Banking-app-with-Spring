@@ -22,17 +22,17 @@
     - [x] Configure JDBCTemplate
     - [x] Create DAOs for necessary DB operations
     - [x] Create domain objects for service level data transfer
-    - [ ] Create DTOs for requests
+    - [x] Create DTOs for requests
 
 ### Create Services:
 
 1. Authentication service:
-   - [ ] Password, username hashing
-   - [ ] Argon 2 Key derivation
-   - [ ] Data encryption, and decryption
-2. User service:
-   - [ ] User creation
-   - [ ] User deletion
+   - [x] Password, username hashing
+   - [x] Argon 2 Key derivation
+   - [x] Data encryption, and decryption
+2. Access service:
+   - [x] User creation
+   - [x] User deletion
    - [ ] Account creation
    - [ ] Account deletion
    - [ ] inter Account transaction
