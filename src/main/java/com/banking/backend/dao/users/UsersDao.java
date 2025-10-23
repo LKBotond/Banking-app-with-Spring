@@ -28,8 +28,8 @@ public interface UsersDao {
     /**
      * 
      * @param email
-     * @return Base user object with the id, email, encryptedName, and iv fields
-     *         filled
+     * @return Base user object for authentication
+     * 
      */
     Optional<User> getUserByEmail(String email);
 

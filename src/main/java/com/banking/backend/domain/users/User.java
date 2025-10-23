@@ -7,13 +7,20 @@ import lombok.Data;
 
 @Data
 public class User {
+    // Identifications
     private long userID;
     private String email;
-    private String encryptedName;
+
+    // Security
+    private String passHash;
     private String IV;
+    private String salt;
+
+    // Name
+    private String encryptedName;
     private String name;
     private String familyName;
-    private ArrayList<Account> accounts= new ArrayList<>();
+    private ArrayList<Account> accounts = new ArrayList<>();
 
     /**
      * Creates a user domain object
@@ -21,20 +28,14 @@ public class User {
      * Note: The {@code accounts} field remains uninitialized and must be set
      * afterward.
      */
-    public User(int userID, String email, String encryptedName, String IV) {
+    public User(long userID, String email, String encryptedName, String salt, String IV, String passHash) {
         this.userID = userID;
         this.email = email;
         this.encryptedName = encryptedName;
+        this.salt = salt;
         this.IV = IV;
+        this.passHash = passHash;
     }
-
-    /**
-     * Creates an empty user domain object
-     */
-    public static User empty() {
-        return new User(0, null, null, null);
-    }
-
 
     /**
      * Adds an {@code account} to the {@code accounts} field for the User domain

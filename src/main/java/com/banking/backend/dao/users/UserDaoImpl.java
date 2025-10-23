@@ -51,7 +51,9 @@ public class UserDaoImpl implements UsersDao {
                     rs.getInt("user_id"),
                     email,
                     rs.getString("name_encrypted"),
-                    rs.getString("iv")),
+                    rs.getString("salt"),
+                    rs.getString("iv"),
+                    rs.getString("pass_hash")),
                     email);
             return Optional.of(user);
         } catch (EmptyResultDataAccessException exception) {

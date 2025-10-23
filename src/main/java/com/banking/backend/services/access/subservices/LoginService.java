@@ -45,17 +45,13 @@ public class LoginService {
     // Main
     @Transactional
     public Optional<Object> login(LoginRequestDTO loginRequest) {
-        final String passOnRecord = getUserPassHash(loginRequest.getEmail());
-        if (passOnRecord == null) {
+        User user = getUserData(loginRequest.getEmail());
+        if (user == null) {
             return Optional.of(404);
         }
 
-        if (!authenticationService.verifyPass(passOnRecord, loginRequest.getPassword())) {
+        if (!authenticationService.verifyPass(user.getPassHash(), loginRequest.getPassword())) {
             return Optional.of(401);
-        }
-        User user = getBaseUser(loginRequest.getEmail());
-        if (user == null) {
-            return Optional.of(404);
         }
         setAccountsForUser(user);
         user.splitName(decryptUserName(user, loginRequest.getPassword()));
@@ -68,20 +64,12 @@ public class LoginService {
     }
 
     // Helpers
-    private String getUserPassHash(String email) {
-        Optional<String> passOnRecord = this.userDao.checkForUserByEmail(email);
+    private User getUserData(String email) {
+        Optional<User> passOnRecord = this.userDao.getUserByEmail(email);
         if (passOnRecord.isEmpty()) {
             return null;
         }
         return passOnRecord.get();
-    }
-
-    private User getBaseUser(String email) {
-        Optional<User> user = this.userDao.getUserByEmail(email);
-        if (user.isEmpty()) {
-            return null;
-        }
-        return user.get();
     }
 
     private ArrayList<Account> getAccounts(long userId) {
@@ -95,8 +83,8 @@ public class LoginService {
     }
 
     private String decryptUserName(User user, char[] password) {
-        final String salt = this.userDao.getSalt(user.getUserID());
-        final String iv = this.userDao.getIV(user.getUserID());
+        final String salt = user.getSalt();
+        final String iv = user.getIV();
         final SecretKey decryptionKey = this.argon2KDF.deriveKey(password, Base64.getDecoder().decode(salt));
         final String decryptedName = this.encryptor.decryptWithAESGCM(user.getEncryptedName(),
                 Base64.getDecoder().decode(iv), decryptionKey);
