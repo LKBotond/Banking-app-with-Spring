@@ -5,8 +5,7 @@
 1.  [Create DB](#create-db)
 2.  [Create Services](#create-services)
 3.  [Create Rest Endpoints](#create-rest-endpoints)
-4.  [Rework Authentication](#rework-authentication)
-
+3.  [Rework Authentication](#rework-authentication)
 
 ## Detailed:
 
@@ -21,18 +20,18 @@
     - [x] Create a static aggregator class to store the SQL Strings
     - [x] Configure JDBCTemplate
     - [x] Create DAOs for necessary DB operations
-    - [x] Create domain objects for service level data transfer
-    - [x] Create DTOs for requests
+    - [ ] Create domain objects for service level data transfer
+    - [ ] Create DTOs for requests
 
 ### Create Services:
 
 1. Authentication service:
-   - [x] Password, username hashing
-   - [x] Argon 2 Key derivation
-   - [x] Data encryption, and decryption
-2. Access service:
-   - [x] User creation
-   - [x] User deletion
+   - [ ] Password, username hashing
+   - [ ] Argon 2 Key derivation
+   - [ ] Data encryption, and decryption
+2. User service:
+   - [ ] User creation
+   - [ ] User deletion
    - [ ] Account creation
    - [ ] Account deletion
    - [ ] inter Account transaction
@@ -47,12 +46,12 @@
    - [ ] DData visualization
    - [ ] Transfer
    - [ ] Withdrawal
-   - [ ] Deposit
+   - [ ] DDeposit
 
 ### Rework Authentication:
-- [x] add active_sessions table to schema
+- [ ] add active_sessions table to schema
       this will couple the logins table's session_id and a random UUID in a tight coupling
-- [x] add sql queries to access and modify said table
-- [x] add daos to implement said queries
+- [ ] add sql queries to access and modify said table
+- [ ] add daos to implement said queries
 - [ ] refractor authentication services
 - [ ] implement rest access ponts

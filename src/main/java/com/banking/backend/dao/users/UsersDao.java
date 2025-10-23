@@ -10,12 +10,10 @@ public interface UsersDao {
      * 
      * @param email
      * @param nameEncrypted
-     * @param salt
-     * @param iv
      * @param passHash
      * @return user_ID
      */
-    Long create(String email, String nameEncrypted, String salt, String iv, String passHash);
+    Long create(String email, String nameEncrypted, String passHash);
 
     /**
      * 
@@ -25,26 +23,10 @@ public interface UsersDao {
      */
     Optional<String> checkForUserByEmail(String email);
 
-    /**
-     * 
-     * @param email
-     * @return Base user object for authentication
-     * 
-     */
     Optional<User> getUserByEmail(String email);
 
-    /**
-     * 
-     * @param email
-     * @return only the User's id
-     */
     Optional<Long> getUserIDbyEmail(String email);
 
-    /**
-     * 
-     * @param userID
-     * @return returns the password hash
-     */
     String getPassHashByID(long userID);
 
     public String getSalt(long userID);

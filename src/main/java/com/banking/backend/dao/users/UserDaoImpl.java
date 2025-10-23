@@ -20,14 +20,12 @@ public class UserDaoImpl implements UsersDao {
     }
 
     @Override
-    public Long create(String email, String nameEncrypted, String salt, String iv, String passHash) {
+    public Long create(String email, String nameEncrypted, String passHash) {
         try {
             return jdbcTemplate.queryForObject(DBQueries.CREATE_USER,
                     Long.class,
                     email,
                     nameEncrypted,
-                    salt,
-                    iv,
                     passHash);
         } catch (DataAccessException e) {
             return null;
@@ -51,9 +49,7 @@ public class UserDaoImpl implements UsersDao {
                     rs.getInt("user_id"),
                     email,
                     rs.getString("name_encrypted"),
-                    rs.getString("salt"),
-                    rs.getString("iv"),
-                    rs.getString("pass_hash")),
+                    rs.getString("iv")),
                     email);
             return Optional.of(user);
         } catch (EmptyResultDataAccessException exception) {

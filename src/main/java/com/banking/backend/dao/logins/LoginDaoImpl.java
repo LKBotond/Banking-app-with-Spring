@@ -20,8 +20,8 @@ public class LoginDaoImpl implements LoginDao {
     @Override
     public Optional<Long> login(long userID) {
         try {
-            Long loginId = jddJdbcTemplate.queryForObject(DBQueries.LOGIN, Long.class, userID);
-            return Optional.of(loginId);
+            Long rs = jddJdbcTemplate.queryForObject(DBQueries.LOGIN, Long.class, userID);
+            return Optional.of(rs);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
