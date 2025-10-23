@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.banking.backend.services.security.Argon2KDF;
 import com.banking.backend.services.security.AuthenticationService;
 import com.banking.backend.services.security.Encryptor;
-
+import com.banking.backend.services.session.SessionService;
 //DTOs
 import com.banking.backend.dto.access.AccessToken;
 import com.banking.backend.dto.authentication.LoginRequestDTO;
@@ -16,7 +16,6 @@ import com.banking.backend.dto.authentication.LoginRequestDTO;
 //DAOs
 import com.banking.backend.dao.accounts.AccountDAO;
 import com.banking.backend.dao.logins.LoginDao;
-import com.banking.backend.dao.sessions.ActiveSessionsDao;
 import com.banking.backend.dao.users.UsersDao;
 
 //Domains
@@ -34,8 +33,8 @@ import javax.crypto.SecretKey;
 @AllArgsConstructor
 public class LoginService {
     AuthenticationService authenticationService;
+    SessionService sessionService;
     Encryptor encryptor;
-    ActiveSessionsDao activeSessionsDao;
     Argon2KDF argon2KDF;
 
     UsersDao userDao;
@@ -55,11 +54,10 @@ public class LoginService {
         }
         setAccountsForUser(user);
         user.splitName(decryptUserName(user, loginRequest.getPassword()));
+        AccessToken accessToken = createIncompleteAccessToken(user);
         final long loginId = this.loginDao.login(user.getUserID()).get();
-        final String sessionToken = Base64.getEncoder().encodeToString(this.argon2KDF.getRandom(16));
-        this.activeSessionsDao.addActiveSession(sessionToken, loginId);
-        AccessToken accessToken = new AccessToken(sessionToken, user.getName(), user.getFamilyName(),
-                user.getAllAccounts());
+        sessionService.createSessionToken(accessToken, loginId);
+        authenticationService.wipePass(loginRequest.getPassword());
         return Optional.of(accessToken);
     }
 
@@ -89,5 +87,10 @@ public class LoginService {
         final String decryptedName = this.encryptor.decryptWithAESGCM(user.getEncryptedName(),
                 Base64.getDecoder().decode(iv), decryptionKey);
         return decryptedName;
+    }
+
+    private AccessToken createIncompleteAccessToken(User user) {
+        return new AccessToken(null, user.getName(), user.getFamilyName(),
+                user.getAllAccounts());
     }
 }

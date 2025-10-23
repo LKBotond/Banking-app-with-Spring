@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 //DAOs
 import com.banking.backend.dao.logins.LoginDao;
-import com.banking.backend.dao.sessions.ActiveSessionsDao;
 import com.banking.backend.dao.users.UsersDao;
 
 //DTOs
@@ -17,6 +16,7 @@ import com.banking.backend.dto.authentication.RegisterRequestDTO;
 import com.banking.backend.services.security.Argon2KDF;
 import com.banking.backend.services.security.AuthenticationService;
 import com.banking.backend.services.security.Encryptor;
+import com.banking.backend.services.session.SessionService;
 
 //Utils
 import lombok.AllArgsConstructor;
@@ -27,12 +27,13 @@ import java.util.Base64;
 @Service
 @AllArgsConstructor
 public class RegistrationService {
-    Argon2KDF argon2KDF;
     AuthenticationService authenticationService;
+    SessionService sessionService;
+    Argon2KDF argon2KDF;
     Encryptor encryptor;
 
     UsersDao usersDao;
-    ActiveSessionsDao activeSessionsDao;
+
     LoginDao loginDao;
 
     @Transactional
@@ -53,14 +54,10 @@ public class RegistrationService {
         if (userID == null) {
             throw new RuntimeException("Registration failed");
         }
-        long loginId = this.loginDao.login(userID).get();
-
-        String sessionToken = Base64.getEncoder().encodeToString(this.argon2KDF.getRandom(16));
-
-        this.activeSessionsDao.addActiveSession(sessionToken, loginId);
-
-        AccessToken accessToken = new AccessToken(sessionToken, registerRequest.getFirstName(),
+        AccessToken accessToken = new AccessToken(null, registerRequest.getFirstName(),
                 registerRequest.getLastName(), null);
+        long loginId = this.loginDao.login(userID).get();
+        this.sessionService.createSessionToken(accessToken, loginId);
         return Optional.of(accessToken);
     }
 }
