@@ -2,10 +2,11 @@ package com.banking.backend.domain.users;
 
 import java.util.ArrayList;
 
-import com.banking.backend.Legacy.domain.accounts.Account;
+import com.banking.backend.domain.accounts.Account;
 
-//redesign a bit, tldr, do not need the whole thingy, just the specifics, meaning separate register and login dao and stuff
+import lombok.Data;
 
+@Data
 public class User {
     private long userID;
     private String email;
@@ -13,8 +14,7 @@ public class User {
     private String IV;
     private String name;
     private String familyName;
-    private char[] passHash;
-    private ArrayList<Account> accounts;
+    private ArrayList<Account> accounts= new ArrayList<>();
 
     /**
      * Creates a user domain object
@@ -36,12 +36,6 @@ public class User {
         return new User(0, null, null, null);
     }
 
-    /**
-     * Sets the {@code accounts} field for the User domain object
-     */
-    public void setAccountsForUser(ArrayList<Account> accounts) {
-        this.accounts = accounts;
-    }
 
     /**
      * Adds an {@code account} to the {@code accounts} field for the User domain
@@ -61,7 +55,7 @@ public class User {
 
     public Account getAccountByID(int accountID) {
         for (Account account : accounts) {
-            if (account.getAccounID() == accountID) {
+            if (account.getAccountID() == accountID) {
                 return account;
             }
         }
@@ -86,34 +80,6 @@ public class User {
             this.familyName = "";
         }
 
-    }
-
-    public String getEncryptedName() {
-        return this.encryptedName;
-    }
-
-    public String getIV() {
-        return this.IV;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getFamilyName() {
-        return this.familyName;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public long getUserId() {
-        return this.userID;
-    }
-
-    public char[] getPassHash() {
-        return this.passHash;
     }
 
 }

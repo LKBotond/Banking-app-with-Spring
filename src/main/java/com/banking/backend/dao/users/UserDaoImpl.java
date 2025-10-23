@@ -20,12 +20,14 @@ public class UserDaoImpl implements UsersDao {
     }
 
     @Override
-    public Long create(String email, String nameEncrypted, String passHash) {
+    public Long create(String email, String nameEncrypted, String salt, String iv, String passHash) {
         try {
             return jdbcTemplate.queryForObject(DBQueries.CREATE_USER,
                     Long.class,
                     email,
                     nameEncrypted,
+                    salt,
+                    iv,
                     passHash);
         } catch (DataAccessException e) {
             return null;
