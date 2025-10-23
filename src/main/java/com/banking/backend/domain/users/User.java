@@ -3,7 +3,6 @@ package com.banking.backend.domain.users;
 import java.util.ArrayList;
 
 import com.banking.backend.domain.accounts.Account;
-
 import lombok.Data;
 
 @Data
