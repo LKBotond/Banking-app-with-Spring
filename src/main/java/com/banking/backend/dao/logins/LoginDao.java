@@ -6,6 +6,6 @@ public interface LoginDao {
     
     public Optional<Long> login(long userID);
 
-    public void logout(long sessionID);
+    public void logout(long loginID);
 
 }
