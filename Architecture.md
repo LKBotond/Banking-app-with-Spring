@@ -44,19 +44,19 @@ sequenceDiagram
     participant Argon2KDF
     participant Encryptor
     participant LoginDao
-    participant ActiveSessionsDao
+    participant SessionService
 
     Client->>LoginService: login(loginRequest)
     LoginService->>UsersDao: getUserByEmail(loginRequest.getEmail())
     UsersDao-->>LoginService: Optional<User> user
-    
+
     alt user is not found
         LoginService-->>Client: Optional.of(404)
     end
 
     LoginService->>AuthenticationService: verifyPass(user.getPassHash(), loginRequest.getPassword())
     AuthenticationService-->>LoginService: boolean isAuthenticated
-    
+
     alt password verification fails
         LoginService-->>Client: Optional.of(401)
     end
@@ -65,23 +65,26 @@ sequenceDiagram
     AccountDAO-->>LoginService: ArrayList<Account> accounts
     LoginService->>LoginService: user.setAccounts(accounts)
 
-    Note over LoginService: Decrypt user's name using salt and IV from the user object.
+    Note over LoginService: Decrypt user's name to populate User object.
     LoginService->>Argon2KDF: deriveKey(password, user.getSalt())
     Argon2KDF-->>LoginService: SecretKey decryptionKey
     LoginService->>Encryptor: decryptWithAESGCM(user.getEncryptedName(), user.getIV(), decryptionKey)
     Encryptor-->>LoginService: String decryptedName
     LoginService->>LoginService: user.splitName(decryptedName)
 
+    Note over LoginService: Create AccessToken shell without session token.
+    LoginService->>LoginService: createIncompleteAccessToken(user)
+
     LoginService->>LoginDao: login(user.getUserID())
     LoginDao-->>LoginService: Optional<long> loginId
 
-    LoginService->>Argon2KDF: getRandom(16)
-    Argon2KDF-->>LoginService: byte[] randomBytes
-    Note over LoginService: sessionToken = Base64.encode(randomBytes)
-    
-    LoginService->>ActiveSessionsDao: addActiveSession(sessionToken, loginId)
+    Note over LoginService: Delegate session creation to SessionService.
+    LoginService->>SessionService: createSessionToken(accessToken, loginId)
+    Note right of SessionService: SessionService generates the token,<br/>adds it to the AccessToken object,<br/>and persists the session.
+    SessionService-->>LoginService: void
 
-    Note over LoginService: Create new AccessToken with user details and accounts.
+    LoginService->>AuthenticationService: wipePass(loginRequest.getPassword())
+    AuthenticationService-->>LoginService: void
+
     LoginService-->>Client: Optional.of(accessToken)
-
 ```

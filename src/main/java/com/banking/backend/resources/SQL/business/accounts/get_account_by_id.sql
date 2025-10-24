@@ -3,4 +3,5 @@ SELECT
 FROM
     accounts
 WHERE
-    id = ?;
+    id = ? FOR
+UPDATE;
