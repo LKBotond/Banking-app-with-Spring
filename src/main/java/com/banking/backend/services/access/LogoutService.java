@@ -21,10 +21,10 @@ public class LogoutService {
     LoginDao loginDao;
 
     @Transactional
-    public void logout(LogoutRequestDTO logoutRequest) {
-        long loginId = activeSessionsDao.getUsersLoginId(logoutRequest.getSessionId())
+    public void logout(LogoutRequestDTO request) {
+        long loginId = activeSessionsDao.getUsersLoginId(request.getSessionId())
                 .orElseThrow(LoginIdNotFoundException::new);
         this.loginDao.logout(loginId);
-        this.activeSessionsDao.deleteActiveSession(logoutRequest.getSessionId());
+        this.activeSessionsDao.deleteActiveSession(request.getSessionId());
     }
 }

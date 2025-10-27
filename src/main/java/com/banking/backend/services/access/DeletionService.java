@@ -35,11 +35,11 @@ public class DeletionService {
     ActiveSessionsDao activeSessionsDao;
 
     @Transactional
-    public void deleteUser(DeletionRequestDTO deletionRequest) {
-        Long userId = activeSessionsDao.getUserIdbySessionId(deletionRequest.getSessionId())
+    public void deleteUser(DeletionRequestDTO request) {
+        Long userId = activeSessionsDao.getUserIdbySessionId(request.getSessionId())
                 .orElseThrow(InvalidSessionException::new);
         String passOnRecord = userDao.getPassHashByID(userId).orElseThrow(UserNotFoundException::new);
-        if (!authenticationService.verifyPass(passOnRecord, deletionRequest.getPassword())) {
+        if (!authenticationService.verifyPass(passOnRecord, request.getPassword())) {
             throw new WrongPasswordException();
         }
         List<Account> accounts = this.accountDao.getAccountsByUserID(userId);
@@ -48,6 +48,6 @@ public class DeletionService {
         }
 
         deletionDao.deleteUser(userId);
-        activeSessionsDao.deleteActiveSession(passOnRecord);
+        activeSessionsDao.deleteActiveSession(request.getSessionId());
     }
 }

@@ -1,5 +1,7 @@
 package com.banking.backend.services.security;
 
+import java.util.Arrays;
+
 import org.springframework.stereotype.Service;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
@@ -25,7 +27,21 @@ public class AuthenticationService {
         return this.argon2.verify(hashOnRecord, passArray);
     }
 
-    public void wipePass(char[] toBeWiped) {
-        this.argon2.wipeArray(toBeWiped);
+    public void wipeSensitiveMemory(Object... arrays) {
+        for (Object array : arrays) {
+            if (array instanceof char[] chars) {
+                Arrays.fill(chars, '\0');
+            } else if (array instanceof byte[] bytes) {
+                Arrays.fill(bytes, (byte) 0);
+            } else if (array instanceof int[] ints) {
+                Arrays.fill(ints, 0);
+            } else if (array instanceof long[] longs) {
+                Arrays.fill(longs, 0L);
+            } else if (array instanceof Object[] objs) {
+                Arrays.fill(objs, null);
+            } else {
+                throw new IllegalArgumentException("Unsupported array type: " + array.getClass());
+            }
+        }
     }
 }

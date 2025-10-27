@@ -44,21 +44,30 @@ public class LoginService {
 
     // Main
     @Transactional
-    public AccessToken login(LoginRequestDTO loginRequest) {
-        User user = this.userDao.getUserByEmail(loginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
-        if (!authenticationService.verifyPass(user.getPassHash(), loginRequest.getPassword())) {
-            throw new WrongPasswordException();
+    public AccessToken login(LoginRequestDTO request) {
+
+        User user = authenticateUser(request);
+        try {
+            setAccountsForUser(user);
+            user.splitName(decryptUserName(user, request.getPassword()));
+            AccessToken accessToken = createIncompleteAccessToken(user);
+            Long loginId = this.loginDao.login(user.getUserID()).orElseThrow(LoginIdNotFoundException::new);
+            sessionService.createSessionToken(accessToken, loginId);
+            return accessToken;
+        } finally {
+            authenticationService.wipeSensitiveMemory(request.getPassword(), user.getIV(), user.getSalt());
         }
-        setAccountsForUser(user);
-        user.splitName(decryptUserName(user, loginRequest.getPassword()));
-        AccessToken accessToken = createIncompleteAccessToken(user);
-        Long loginId = this.loginDao.login(user.getUserID()).orElseThrow(LoginIdNotFoundException::new);
-        sessionService.createSessionToken(accessToken, loginId);
-        authenticationService.wipePass(loginRequest.getPassword());
-        return accessToken;
+
     }
 
     // Helpers
+    private User authenticateUser(LoginRequestDTO request) {
+        User user = userDao.getUserByEmail(request.getEmail()).orElseThrow(UserNotFoundException::new);
+        if (!authenticationService.verifyPass(user.getPassHash(), request.getPassword())) {
+            throw new WrongPasswordException();
+        }
+        return user;
+    }
 
     private ArrayList<Account> getAccounts(long userId) {
         return new ArrayList<>(this.accountDao.getAccountsByUserID(userId));

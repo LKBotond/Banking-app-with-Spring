@@ -26,33 +26,57 @@ import java.util.Base64;
 @Service
 @AllArgsConstructor
 public class RegistrationService {
-    AuthenticationService authenticationService;
-    SessionService sessionService;
-    Argon2KDF argon2KDF;
-    Encryptor encryptor;
+    private final AuthenticationService authenticationService;
+    private final SessionService sessionService;
+    private final Argon2KDF argon2KDF;
+    private final Encryptor encryptor;
 
-    UsersDao usersDao;
-    LoginDao loginDao;
+    private final UsersDao usersDao;
+    private final LoginDao loginDao;
 
     @Transactional
-    public AccessToken register(RegisterRequestDTO registerRequest) {
-        String fullName = (registerRequest.getFirstName() + " " + registerRequest.getLastName());
+    public AccessToken register(RegisterRequestDTO request) {
 
         byte[] salt = this.argon2KDF.getRandom(16);
         byte[] iv = this.argon2KDF.getRandom(12);
-        SecretKey encryptionKey = this.argon2KDF.deriveKey(registerRequest.getPassword().clone(), salt);
+        try {
+            SecretKey encryptionKey = deriveEncryptionKey(request.getPassword(), salt);
+            String encryptedName = encryptFullName(request, encryptionKey, iv);
+            String passHash = hashPass(request);
+            Long userId = createUserInDb(request, encryptedName, salt, iv, passHash);
+            Long loginId = createLoginEntry(userId);
+            AccessToken accessToken = createAccessToken(request, loginId);
+            return accessToken;
+        } finally {
+            authenticationService.wipeSensitiveMemory(salt, iv, request.getPassword());
+        }
 
-        String encryptedName = this.encryptor.encryptWithAESGCM(fullName, encryptionKey, iv);
+    }
 
-        String passHash = authenticationService.hashWithArgon2(registerRequest.getPassword().clone().clone());
-        String storableSalt = Base64.getEncoder().encodeToString(salt);
-        String storableIV = Base64.getEncoder().encodeToString(iv);
-        Long userID = this.usersDao.create(registerRequest.getEmail(), encryptedName, storableSalt, storableIV,
-                passHash).orElseThrow(RegistrationFailedException::new);
-        Long loginId = this.loginDao.login(userID).orElseThrow(RegistrationFailedException::new);
+    private SecretKey deriveEncryptionKey(char[] password, byte[] salt) {
+        return argon2KDF.deriveKey(password.clone(), salt);
+    }
 
-        AccessToken accessToken = createAccessToken(registerRequest, loginId);
-        return accessToken;
+    private String encryptFullName(RegisterRequestDTO request, SecretKey key, byte[] iv) {
+        String fullName = String.join(" ", request.getFirstName(), request.getLastName());
+        return encryptor.encryptWithAESGCM(fullName, key, iv);
+    }
+
+    private String hashPass(RegisterRequestDTO request) {
+        return authenticationService.hashWithArgon2(request.getPassword());
+    }
+
+    private Long createUserInDb(RegisterRequestDTO request, String encryptedName, byte[] salt, byte[] iv,
+            String passHash) {
+        String encodedSalt = Base64.getEncoder().encodeToString(salt);
+        String encodedIV = Base64.getEncoder().encodeToString(iv);
+
+        return usersDao.create(request.getEmail(), encryptedName, encodedSalt, encodedIV, passHash)
+                .orElseThrow(RegistrationFailedException::new);
+    }
+
+    private Long createLoginEntry(Long userId) {
+        return this.loginDao.login(userId).orElseThrow(RegistrationFailedException::new);
     }
 
     private AccessToken createAccessToken(RegisterRequestDTO registerRequest, Long loginId) {
