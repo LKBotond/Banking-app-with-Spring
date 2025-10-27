@@ -6,25 +6,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 //DTOs
 import com.banking.backend.dto.authentication.LogoutRequestDTO;
-
+import com.banking.backend.exceptions.LoginIdNotFoundException;
 //DAOs
 import com.banking.backend.dao.logins.LoginDao;
 import com.banking.backend.dao.sessions.ActiveSessionsDao;
 
 //Utils
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class LogoutService {
-ActiveSessionsDao activeSessionsDao;
-LoginDao loginDao;
+    ActiveSessionsDao activeSessionsDao;
+    LoginDao loginDao;
+
     @Transactional
-    public Optional<Object> logout(LogoutRequestDTO logoutRequest) {
-        long loginId = activeSessionsDao.getUsersLoginId(logoutRequest.getSessionId()).get();
+    public void logout(LogoutRequestDTO logoutRequest) {
+        long loginId = activeSessionsDao.getUsersLoginId(logoutRequest.getSessionId())
+                .orElseThrow(LoginIdNotFoundException::new);
         this.loginDao.logout(loginId);
         this.activeSessionsDao.deleteActiveSession(logoutRequest.getSessionId());
-        return Optional.of(200);
     }
 }

@@ -12,6 +12,7 @@ import com.banking.backend.services.session.SessionService;
 //DTOs
 import com.banking.backend.dto.access.AccessToken;
 import com.banking.backend.dto.authentication.LoginRequestDTO;
+import com.banking.backend.exceptions.LoginIdNotFoundException;
 import com.banking.backend.exceptions.UserNotFoundException;
 import com.banking.backend.exceptions.WrongPasswordException;
 //DAOs
@@ -51,7 +52,7 @@ public class LoginService {
         setAccountsForUser(user);
         user.splitName(decryptUserName(user, loginRequest.getPassword()));
         AccessToken accessToken = createIncompleteAccessToken(user);
-        final long loginId = this.loginDao.login(user.getUserID()).get();
+        Long loginId = this.loginDao.login(user.getUserID()).orElseThrow(LoginIdNotFoundException::new);
         sessionService.createSessionToken(accessToken, loginId);
         authenticationService.wipePass(loginRequest.getPassword());
         return accessToken;
