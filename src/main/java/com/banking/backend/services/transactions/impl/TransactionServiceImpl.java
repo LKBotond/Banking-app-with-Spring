@@ -14,8 +14,8 @@ import com.banking.backend.services.transactions.TransactionService;
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
-    AccountDAO accountDAO;
-    MasterRecordDao masterRecordDao;
+    private final AccountDAO accountDAO;
+    private final MasterRecordDao masterRecordDao;
 
     public TransactionServiceImpl(AccountDAO accountDAO, MasterRecordDao masterRecordDao) {
         this.accountDAO = accountDAO;
@@ -38,7 +38,6 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void transaction(long senderID, long receiverID, BigDecimal funds) {
         updateBalance(senderID, funds.negate());
-
         updateBalance(receiverID, funds);
         masterRecordDao.recordTransfer(senderID, receiverID, funds);
     }

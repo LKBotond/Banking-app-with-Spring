@@ -56,3 +56,6 @@
 - [x] add daos to implement said queries
 - [ ] refractor authentication services
 - [ ] implement rest access ponts
+
+
+ ## NEEEED TO UNLOCK GET_ACCOUNT_BY_ID IF TRANSACTION FAILS
