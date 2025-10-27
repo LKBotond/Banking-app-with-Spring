@@ -1,4 +1,4 @@
-package com.banking.backend.services.access.subservices;
+package com.banking.backend.services.access;
 
 //SPring Specific
 import org.springframework.stereotype.Service;
@@ -15,31 +15,32 @@ import com.banking.backend.domain.accounts.Account;
 
 //DTOs
 import com.banking.backend.dto.authentication.DeletionRequestDTO;
-
+import com.banking.backend.exceptions.InvalidSessionException;
+import com.banking.backend.exceptions.UserNotFoundException;
+import com.banking.backend.exceptions.WrongPasswordException;
 //Services
 import com.banking.backend.services.security.AuthenticationService;
 
 import lombok.AllArgsConstructor;
-import java.util.Optional;
+
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class DeletionService {
     AuthenticationService authenticationService;
-    
     UsersDao userDao;
     AccountDAO accountDao;
     DeletionDao deletionDao;
     ActiveSessionsDao activeSessionsDao;
 
     @Transactional
-    public Optional<Object> deleteUser(DeletionRequestDTO deletionRequest) {
-        long userId = this.activeSessionsDao.getUserIdbySessionId(deletionRequest.getSessionId()).get();
-        String passOnRecord = this.userDao.getPassHashByID(userId);
-
+    public void deleteUser(DeletionRequestDTO deletionRequest) {
+        Long userId = activeSessionsDao.getUserIdbySessionId(deletionRequest.getSessionId())
+                .orElseThrow(InvalidSessionException::new);
+        String passOnRecord = userDao.getPassHashByID(userId).orElseThrow(UserNotFoundException::new);
         if (!authenticationService.verifyPass(passOnRecord, deletionRequest.getPassword())) {
-            return Optional.of(401);
+            throw new WrongPasswordException();
         }
         List<Account> accounts = this.accountDao.getAccountsByUserID(userId);
         for (Account account : accounts) {
@@ -47,7 +48,6 @@ public class DeletionService {
         }
 
         deletionDao.deleteUser(userId);
-        return Optional.of(200);
+        activeSessionsDao.deleteActiveSession(passOnRecord);
     }
-
 }

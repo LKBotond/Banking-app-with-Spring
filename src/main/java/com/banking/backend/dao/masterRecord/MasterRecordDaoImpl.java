@@ -3,7 +3,7 @@ package com.banking.backend.dao.masterRecord;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
-import com.banking.backend.Legacy.dao.BaseDaoImpl;
+import com.banking.backend.dao.BaseDaoImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -46,17 +46,17 @@ public class MasterRecordDaoImpl extends BaseDaoImpl implements MasterRecordDao 
 
     @Override
     public void recordTransfer(long senderID, long receiverID, BigDecimal funds) {
-        jdbcTemplate.update(DBQueries.RECORD_TRANSFER, senderID, receiverID, funds);
+        updateDB(DBQueries.RECORD_TRANSFER, senderID, receiverID, funds);
     }
 
     @Override
     public void recordDeposit(long receiverID, BigDecimal funds) {
-        jdbcTemplate.update(DBQueries.RECORD_DEPOSIT, receiverID, funds);
+        updateDB(DBQueries.RECORD_DEPOSIT, receiverID, funds);
     }
 
     @Override
     public void recordWithdrawal(long senderID, BigDecimal funds) {
-        jdbcTemplate.update(DBQueries.RECORD_WITHDRAWAL, senderID, funds);
+        updateDB(DBQueries.RECORD_WITHDRAWAL, senderID, funds);
     }
 
 }

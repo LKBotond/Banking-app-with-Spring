@@ -1,4 +1,4 @@
-package com.banking.backend.services.access.subservices;
+package com.banking.backend.services.access;
 
 //Spring Specific
 import org.springframework.stereotype.Service;

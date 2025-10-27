@@ -10,15 +10,13 @@ public interface AccountDAO {
 
     void create(long userID);
 
-    Optional<Account> getAccountByID(long accountID);
+    Optional<Account> getFundsbyAccountID(long accountID);
 
     List<Long> getAccountIdsForUser(long userID);
 
     List<Account> getAccountsByUserID(long userID);
 
     boolean checkForAccountByID(long accountID);
-
-    BigDecimal getFundsForAccount(long accountID);
 
     void updateFundsForAccount(BigDecimal funds, long accountID);
 

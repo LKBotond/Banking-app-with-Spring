@@ -4,21 +4,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.banking.backend.Legacy.dbAccess.DBQueries;
+import com.banking.backend.dao.BaseDaoImpl;
 
 @Repository
-public class DeletionDaoImpl implements DeletionDao {
-    private final JdbcTemplate jdbcTemplate;
+public class DeletionDaoImpl extends BaseDaoImpl implements DeletionDao {
 
     public DeletionDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        super(jdbcTemplate);
     }
 
     @Override
     public void deleteUser(long userID) {
-        jdbcTemplate.update(DBQueries.DELETE_USER, userID);
+        updateDB(DBQueries.DELETE_USER, userID);
     }
 
     public void deleteAccount(long accountID) {
-        jdbcTemplate.update(DBQueries.DELETE_USER, accountID);
+        updateDB(DBQueries.DELETE_USER, accountID);
     }
 }

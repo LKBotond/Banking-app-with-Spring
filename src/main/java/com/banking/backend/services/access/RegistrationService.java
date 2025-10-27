@@ -1,4 +1,4 @@
-package com.banking.backend.services.access.subservices;
+package com.banking.backend.services.access;
 
 //Spring Specific
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import com.banking.backend.dao.users.UsersDao;
 //DTOs
 import com.banking.backend.dto.access.AccessToken;
 import com.banking.backend.dto.authentication.RegisterRequestDTO;
-
+import com.banking.backend.exceptions.RegistrationFailedException;
 //services
 import com.banking.backend.services.security.Argon2KDF;
 import com.banking.backend.services.security.AuthenticationService;
@@ -21,7 +21,6 @@ import com.banking.backend.services.session.SessionService;
 //Utils
 import lombok.AllArgsConstructor;
 import javax.crypto.SecretKey;
-import java.util.Optional;
 import java.util.Base64;
 
 @Service
@@ -33,11 +32,10 @@ public class RegistrationService {
     Encryptor encryptor;
 
     UsersDao usersDao;
-
     LoginDao loginDao;
 
     @Transactional
-    public Optional<Object> register(RegisterRequestDTO registerRequest) {
+    public AccessToken register(RegisterRequestDTO registerRequest) {
         String fullName = (registerRequest.getFirstName() + " " + registerRequest.getLastName());
 
         byte[] salt = this.argon2KDF.getRandom(16);
@@ -50,14 +48,17 @@ public class RegistrationService {
         String storableSalt = Base64.getEncoder().encodeToString(salt);
         String storableIV = Base64.getEncoder().encodeToString(iv);
         Long userID = this.usersDao.create(registerRequest.getEmail(), encryptedName, storableSalt, storableIV,
-                passHash);
-        if (userID == null) {
-            throw new RuntimeException("Registration failed");
-        }
+                passHash).orElseThrow(RegistrationFailedException::new);
+        Long loginId = this.loginDao.login(userID).orElseThrow(RegistrationFailedException::new);
+
+        AccessToken accessToken = createAccessToken(registerRequest, loginId);
+        return accessToken;
+    }
+
+    private AccessToken createAccessToken(RegisterRequestDTO registerRequest, Long loginId) {
         AccessToken accessToken = new AccessToken(null, registerRequest.getFirstName(),
                 registerRequest.getLastName(), null);
-        long loginId = this.loginDao.login(userID).get();
         this.sessionService.createSessionToken(accessToken, loginId);
-        return Optional.of(accessToken);
+        return accessToken;
     }
 }

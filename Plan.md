@@ -35,7 +35,7 @@
    - [x] User deletion
    - [x] Account creation
    - [x] Account deletion
-   - [x] inter Account transaction
+   - [x] Inter Account transaction
 
 ### Create Rest Endpoints:
 

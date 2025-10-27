@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.banking.backend.dao.accounts.AccountDAO;
 import com.banking.backend.dao.deletion.DeletionDao;
+import com.banking.backend.domain.accounts.Account;
+import com.banking.backend.exceptions.AccountNotFoundException;
 
 import lombok.AllArgsConstructor;
 
@@ -24,6 +26,8 @@ public class AccountService {
     }
 
     public BigDecimal getCurrentBalance(Long accountId) {
-        return accountDAO.getFundsForAccount(accountId);
+        Account account = accountDAO.getFundsbyAccountID(accountId).orElseThrow(AccountNotFoundException::new);
+        return account.getBalance();
+
     }
 }

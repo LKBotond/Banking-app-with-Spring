@@ -28,10 +28,10 @@ public class ActiveSessionsDaoImpl extends BaseDaoImpl implements ActiveSessions
     }
 
     public void addActiveSession(String sessionId, long loginId) {
-        addData(DBQueries.ADD_SESSION, loginId, sessionId);
+        updateDB(DBQueries.ADD_SESSION, loginId, sessionId);
     }
 
     public void deleteActiveSession(String sessionId) {
-        jdbcTemplate.update(DBQueries.DELETE_SESSION, sessionId);
+        updateDB(DBQueries.DELETE_SESSION, sessionId);
     }
 }

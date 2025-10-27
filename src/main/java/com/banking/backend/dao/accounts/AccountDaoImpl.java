@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,22 +22,16 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
         super(jdbcTemplate);
     }
 
-    private RowMapper<Account> accountRowMapper() {
-        return (rs, _) -> new Account(
-                rs.getLong("account_id"),
-                rs.getBigDecimal("fund"));
-    }
-
     @Override
     public void create(long userID) {
-        addData(DBQueries.CREATE_ACCOUNT, userID);
+        updateDB(DBQueries.CREATE_ACCOUNT, userID);
     }
 
     @Override
-    public Optional<Account> getAccountByID(long accountID) {
+    public Optional<Account> getFundsbyAccountID(long accountID) {
         Optional<BigDecimal> potential = getScalar(DBQueries.GET_FUNDS_FOR_ACCOUNT, BigDecimal.class, accountID);
         if (potential.isEmpty()) {
-            Optional.empty();
+            return Optional.empty();
         }
         return Optional.of(new Account(accountID, potential.get()));
     }
@@ -48,7 +41,6 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
         return getSingleColumnList(DBQueries.GET_ACCOUNT_IDS, Long.class, userID);
     }
 
-    // return account without the row mapper, user it within
     @Override
     public List<Account> getAccountsByUserID(long userID) {
         return getResultList(DBQueries.GET_ALL_ACCOUNTS_FOR_USER, accountRowMapper(), userID);
@@ -56,21 +48,17 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
 
     @Override
     public boolean checkForAccountByID(long accountID) {
-        try {
-            Long result = jdbcTemplate.queryForObject(DBQueries.GET_ACCOUNT_BY_ID, Long.class, accountID);
-            return result != null;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
-        }
-    }
-
-    @Override
-    public BigDecimal getFundsForAccount(long accountID) {
-        return jdbcTemplate.queryForObject(DBQueries.GET_FUNDS_FOR_ACCOUNT, BigDecimal.class, accountID);
+        return getScalar(DBQueries.GET_ACCOUNT_BY_ID, Long.class, accountID).isPresent();
     }
 
     @Override
     public void updateFundsForAccount(BigDecimal funds, long accountID) {
-        jdbcTemplate.update(DBQueries.UPDATE_FUNDS_FOR_ACCOUNT_ID, funds, accountID);
+        updateDB(DBQueries.UPDATE_FUNDS_FOR_ACCOUNT_ID, funds, accountID);
+    }
+
+    private RowMapper<Account> accountRowMapper() {
+        return (rs, _) -> new Account(
+                rs.getLong("id"),
+                rs.getBigDecimal("fund"));
     }
 }

@@ -15,7 +15,7 @@ public interface UsersDao {
      * @param passHash
      * @return user_ID
      */
-    Long create(String email, String nameEncrypted, String salt, String iv, String passHash);
+    Optional<Long> create(String email, String nameEncrypted, String salt, String iv, String passHash);
 
     /**
      * 
@@ -45,11 +45,11 @@ public interface UsersDao {
      * @param userID
      * @return returns the password hash
      */
-    String getPassHashByID(long userID);
+    Optional<String> getPassHashByID(long userID);
 
-    public String getSalt(long userID);
+    public Optional<String> getSalt(long userID);
 
-    public String getIV(long userID);
+    public Optional<String> getIV(long userID);
 
     public void updateSalt(long userID, String salt);
 

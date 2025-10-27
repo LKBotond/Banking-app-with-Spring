@@ -1,4 +1,4 @@
-package com.banking.backend.services.access.subservices;
+package com.banking.backend.services.access;
 
 //Spring Specific
 import org.springframework.stereotype.Service;
@@ -12,7 +12,8 @@ import com.banking.backend.services.session.SessionService;
 //DTOs
 import com.banking.backend.dto.access.AccessToken;
 import com.banking.backend.dto.authentication.LoginRequestDTO;
-
+import com.banking.backend.exceptions.UserNotFoundException;
+import com.banking.backend.exceptions.WrongPasswordException;
 //DAOs
 import com.banking.backend.dao.accounts.AccountDAO;
 import com.banking.backend.dao.logins.LoginDao;
@@ -25,7 +26,6 @@ import com.banking.backend.domain.users.User;
 //Utils
 import java.util.Base64;
 import java.util.ArrayList;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import javax.crypto.SecretKey;
 
@@ -43,14 +43,10 @@ public class LoginService {
 
     // Main
     @Transactional
-    public Optional<Object> login(LoginRequestDTO loginRequest) {
-        User user = getUserData(loginRequest.getEmail());
-        if (user == null) {
-            return Optional.of(404);
-        }
-
+    public AccessToken login(LoginRequestDTO loginRequest) {
+        User user = this.userDao.getUserByEmail(loginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
         if (!authenticationService.verifyPass(user.getPassHash(), loginRequest.getPassword())) {
-            return Optional.of(401);
+            throw new WrongPasswordException();
         }
         setAccountsForUser(user);
         user.splitName(decryptUserName(user, loginRequest.getPassword()));
@@ -58,17 +54,10 @@ public class LoginService {
         final long loginId = this.loginDao.login(user.getUserID()).get();
         sessionService.createSessionToken(accessToken, loginId);
         authenticationService.wipePass(loginRequest.getPassword());
-        return Optional.of(accessToken);
+        return accessToken;
     }
 
     // Helpers
-    private User getUserData(String email) {
-        Optional<User> passOnRecord = this.userDao.getUserByEmail(email);
-        if (passOnRecord.isEmpty()) {
-            return null;
-        }
-        return passOnRecord.get();
-    }
 
     private ArrayList<Account> getAccounts(long userId) {
         return new ArrayList<>(this.accountDao.getAccountsByUserID(userId));
