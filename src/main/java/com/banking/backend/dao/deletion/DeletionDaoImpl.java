@@ -3,7 +3,7 @@ package com.banking.backend.dao.deletion;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.banking.backend.Legacy.dbAccess.DBQueries;
+import com.banking.backend.dbAccess.DBQueries;
 import com.banking.backend.dao.BaseDaoImpl;
 
 @Repository

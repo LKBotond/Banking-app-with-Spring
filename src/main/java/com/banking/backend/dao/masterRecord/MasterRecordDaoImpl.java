@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.banking.backend.Legacy.dbAccess.DBQueries;
-import com.banking.backend.Legacy.domain.masterRecord.MasterRecord;
+import com.banking.backend.dbAccess.DBQueries;
+import com.banking.backend.domain.masterRecord.MasterRecord;
 
 @Repository
 public class MasterRecordDaoImpl extends BaseDaoImpl implements MasterRecordDao {

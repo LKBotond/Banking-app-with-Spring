@@ -2,7 +2,7 @@ package com.banking.backend.dao.masterRecord;
 
 import java.math.BigDecimal;
 import java.util.List;
-import com.banking.backend.Legacy.domain.masterRecord.MasterRecord;
+import com.banking.backend.domain.masterRecord.MasterRecord;
 
 public interface MasterRecordDao {
     List<MasterRecord> getReceiverData(long receiverID, int limit, int offset);

@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.banking.backend.Legacy.dao.accounts.AccountDAO;
-import com.banking.backend.Legacy.dao.masterRecord.MasterRecordDao;
-import com.banking.backend.Legacy.domain.accounts.Account;
+import com.banking.backend.dao.accounts.AccountDAO;
+import com.banking.backend.dao.masterRecord.MasterRecordDao;
+import com.banking.backend.domain.accounts.Account;
 import com.banking.backend.services.transactions.TransactionService;
 
 @Service
@@ -23,7 +23,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void updateBalance(long accountID, BigDecimal funds) {
-        Optional<Account> potentialAccount = accountDAO.getAccountByID(accountID);
+        Optional<Account> potentialAccount = accountDAO.getFundsbyAccountID(accountID);
         if (potentialAccount.isEmpty()) {
             throw new RuntimeException("Account not found: " + accountID);
         }
@@ -32,7 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (balance.compareTo(BigDecimal.ZERO) < 0) {
             throw new RuntimeException("Insufficient funds for account: " + accountID);
         }
-        accountDAO.updateFundsForAccount(balance, account.getAccounID());
+        accountDAO.updateFundsForAccount(balance, account.getAccountID());
     }
 
     @Override
