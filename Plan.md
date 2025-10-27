@@ -33,9 +33,9 @@
 2. Access service:
    - [x] User creation
    - [x] User deletion
-   - [ ] Account creation
-   - [ ] Account deletion
-   - [ ] inter Account transaction
+   - [x] Account creation
+   - [x] Account deletion
+   - [x] inter Account transaction
 
 ### Create Rest Endpoints:
 
@@ -56,6 +56,6 @@
 - [x] add daos to implement said queries
 - [ ] refractor authentication services
 - [ ] implement rest access ponts
-
-
+- [ ] Update sessionCache for domains which store minimal data for validation purposes to avoid excesive db lookups. 
+ 
  ## NEEEED TO UNLOCK GET_ACCOUNT_BY_ID IF TRANSACTION FAILS
