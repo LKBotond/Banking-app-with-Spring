@@ -3,6 +3,8 @@ package com.banking.backend.dao.masterRecord;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import com.banking.backend.dao.BaseDaoImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,17 +31,17 @@ public class MasterRecordDaoImpl extends BaseDaoImpl implements MasterRecordDao 
     }
 
     @Override
-    public List<MasterRecord> getReceiverData(long receiverID, int limit, int offset) {
+    public Optional<List<MasterRecord>> getReceiverData(long receiverID, int limit, int offset) {
         return getResultList(DBQueries.GET_RECEIVER_DATA, masterRecordRowMapper(), receiverID, limit, offset);
     }
 
     @Override
-    public List<MasterRecord> getSenderData(long senderID, int limit, int offset) {
+    public Optional<List<MasterRecord>> getSenderData(long senderID, int limit, int offset) {
         return getResultList(DBQueries.GET_SENDER_DATA, masterRecordRowMapper(), senderID, limit, offset);
     }
 
     @Override
-    public List<MasterRecord> getTransactionData(long senderID, long receiverID, int limit, int offset) {
+    public Optional<List<MasterRecord>> getTransactionData(long senderID, long receiverID, int limit, int offset) {
         return getResultList(DBQueries.GET_TRANSACTIONS_DATA, masterRecordRowMapper(), senderID, receiverID, limit,
                 offset);
     }

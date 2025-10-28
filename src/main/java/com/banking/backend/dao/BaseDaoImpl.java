@@ -78,9 +78,9 @@ public abstract class BaseDaoImpl {
      * @return a list of rows necessary for domain objects.
      * @throws DataBaseAccessException on SQL errors.
      */
-    protected <T> List<T> getResultList(String sql, RowMapper<T> rowMapper, Object... params) {
+    protected <T> Optional<List<T>> getResultList(String sql, RowMapper<T> rowMapper, Object... params) {
         try {
-            return jdbcTemplate.query(sql, rowMapper, params);
+            return Optional.of(jdbcTemplate.query(sql, rowMapper, params));
         } catch (DataAccessException e) {
             throw new DataBaseAccessException("Failed to fetch result list", e);
         }

@@ -58,4 +58,4 @@
 - [ ] implement rest access ponts
 - [ ] Update sessionCache for domains which store minimal data for validation purposes to avoid excesive db lookups. 
  
- ## NEEEED TO UNLOCK GET_ACCOUNT_BY_ID IF TRANSACTION FAILS
+ ## update transaction logic to select both accounts for locking

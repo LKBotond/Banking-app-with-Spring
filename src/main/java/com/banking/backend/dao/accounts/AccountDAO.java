@@ -14,10 +14,12 @@ public interface AccountDAO {
 
     List<Long> getAccountIdsForUser(long userID);
 
-    List<Account> getAccountsByUserID(long userID);
+    Optional<List<Account>> getAccountsByUserID(long userID);
 
     boolean checkForAccountByID(long accountID);
 
     void updateFundsForAccount(BigDecimal funds, long accountID);
+
+    List<Account> lockAndGetDataForTransaction(long sender, long receiver);
 
 }

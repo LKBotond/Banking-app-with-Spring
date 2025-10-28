@@ -23,6 +23,7 @@ import com.banking.backend.services.security.AuthenticationService;
 
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,12 +43,17 @@ public class DeletionService {
         if (!authenticationService.verifyPass(passOnRecord, request.getPassword())) {
             throw new WrongPasswordException();
         }
-        List<Account> accounts = this.accountDao.getAccountsByUserID(userId);
+        List<Account> accounts = getAccounts(userId);
         for (Account account : accounts) {
             deletionDao.deleteAccount(account.getAccountID());
         }
 
         deletionDao.deleteUser(userId);
         activeSessionsDao.deleteActiveSession(request.getSessionId());
+
+    }
+
+    private ArrayList<Account> getAccounts(long userId) {
+        return new ArrayList<Account>(this.accountDao.getAccountsByUserID(userId).orElse(new ArrayList<Account>()));
     }
 }

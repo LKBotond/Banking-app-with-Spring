@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.banking.backend.dao.BaseDaoImpl;
 import com.banking.backend.dbAccess.DBQueries;
 import com.banking.backend.domain.accounts.Account;
+import com.banking.backend.exceptions.DataBaseAccessException;
 
 @Repository
 @Transactional
@@ -42,7 +43,7 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
     }
 
     @Override
-    public List<Account> getAccountsByUserID(long userID) {
+    public Optional<List<Account>> getAccountsByUserID(long userID) {
         return getResultList(DBQueries.GET_ALL_ACCOUNTS_FOR_USER, accountRowMapper(), userID);
     }
 
@@ -54,6 +55,22 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
     @Override
     public void updateFundsForAccount(BigDecimal funds, long accountID) {
         updateDB(DBQueries.UPDATE_FUNDS_FOR_ACCOUNT_ID, funds, accountID);
+    }
+
+    @Override
+    public List<Account> lockAndGetDataForTransaction(long sender, long receiver) {
+        Optional<List<Account>> potentialAccounts = getResultList(DBQueries.LOCK_FOR_TRANSACTION, accountRowMapper(),
+                sender, receiver);
+        if (potentialAccounts.isEmpty()) {
+            throw new DataBaseAccessException("Missing data for transaction between ids: " + sender + " " + receiver,
+                    null);
+        }
+        List<Account> accounts = potentialAccounts.get();
+        if (accounts.size() != 2) {
+            throw new DataBaseAccessException("Too many or too few accounts for the query", null);
+        }
+        return accounts;
+
     }
 
     private RowMapper<Account> accountRowMapper() {
