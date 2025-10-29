@@ -12,6 +12,7 @@ import com.banking.backend.dao.users.UsersDao;
 import com.banking.backend.dto.access.AccessToken;
 import com.banking.backend.dto.authentication.RegisterRequestDTO;
 import com.banking.backend.exceptions.RegistrationFailedException;
+import com.banking.backend.exceptions.UserAlreadyExistsException;
 //services
 import com.banking.backend.services.security.Argon2KDF;
 import com.banking.backend.services.security.AuthenticationService;
@@ -36,6 +37,10 @@ public class RegistrationService {
 
     @Transactional
     public AccessToken register(RegisterRequestDTO request) {
+
+        if(checkForExistingUser(request)){
+            throw new UserAlreadyExistsException("Email is taken");
+        }
 
         byte[] salt = this.argon2KDF.getRandom(16);
         byte[] iv = this.argon2KDF.getRandom(12);
@@ -84,5 +89,9 @@ public class RegistrationService {
                 registerRequest.getLastName(), null);
         this.sessionService.createSessionToken(accessToken, loginId);
         return accessToken;
+    }
+
+    private boolean checkForExistingUser(RegisterRequestDTO request) {
+        return usersDao.getUserByEmail(request.getEmail()).isPresent();
     }
 }
