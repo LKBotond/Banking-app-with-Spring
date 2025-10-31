@@ -1,26 +1,25 @@
 document
-  .getElementById("registerForm")
+  .getElementById("loginForm")
   .addEventListener("submit", async (event) => {
     event.preventDefault();
-    console.log("Register button clicked");
+    console.log("Login button clicked");
 
-    const RegistrationRequest = {
-      firstName: document.getElementById("firstName").value,
-      lastName: document.getElementById("lastName").value,
+    const loginRequest = {
+
       email: document.getElementById("email").value,
       password: document.getElementById("password").value.split(""),
     };
     try {
-      const response = await fetch("/access/register", {
+      const response = await fetch("/access/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(RegistrationRequest),
+        body: JSON.stringify(loginRequest),
       });
       console.log("Response status:", response.status);
       if (response.ok) {
         const result = await response.json();
         document.getElementById("message").textContent =
-          "Registered successfully! Welcome, " + result.name;
+          "Login successfull! Welcome, " + result.name;
       } else {
         document.getElementById("message").textContent = "Registration failed.";
       }

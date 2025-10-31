@@ -59,7 +59,7 @@ public class LoginService {
             sessionService.createSessionToken(accessToken, loginId);
             return accessToken;
         } finally {
-            authenticationService.wipeSensitiveMemory(request.getPassword(), user.getIV(), user.getSalt());
+            authenticationService.wipeSensitiveMemory(request.getPassword());
         }
 
     }
