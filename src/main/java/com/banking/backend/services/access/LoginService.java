@@ -93,7 +93,6 @@ public class LoginService {
     }
 
     private AccessToken createIncompleteAccessToken(User user) {
-        return new AccessToken(null, user.getName(), user.getFamilyName(),
-                user.getAllAccounts());
+        return new AccessToken(null, user.getName(), user.getFamilyName());
     }
 }

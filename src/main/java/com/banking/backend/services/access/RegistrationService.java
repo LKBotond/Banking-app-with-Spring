@@ -93,7 +93,7 @@ public class RegistrationService {
 
     private AccessToken createAccessToken(RegisterRequestDTO registerRequest, Long loginId) {
         AccessToken accessToken = new AccessToken(null, registerRequest.getFirstName(),
-                registerRequest.getLastName(), null);
+                registerRequest.getLastName());
         this.sessionService.createSessionToken(accessToken, loginId);
         return accessToken;
     }
