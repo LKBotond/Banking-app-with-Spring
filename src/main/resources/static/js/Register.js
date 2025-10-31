@@ -1,3 +1,4 @@
+import { saveSession } from "./Helpers.js";
 document
   .getElementById("registerForm")
   .addEventListener("submit", async (event) => {
@@ -21,6 +22,7 @@ document
         const result = await response.json();
         document.getElementById("message").textContent =
           "Registered successfully! Welcome, " + result.name;
+        saveSession(result);
       } else {
         document.getElementById("message").textContent = "Registration failed.";
       }

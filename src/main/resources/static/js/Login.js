@@ -1,3 +1,4 @@
+import { saveSession } from "./Helpers.js";
 document
   .getElementById("loginForm")
   .addEventListener("submit", async (event) => {
@@ -5,7 +6,6 @@ document
     console.log("Login button clicked");
 
     const loginRequest = {
-
       email: document.getElementById("email").value,
       password: document.getElementById("password").value.split(""),
     };
@@ -20,6 +20,7 @@ document
         const result = await response.json();
         document.getElementById("message").textContent =
           "Login successfull! Welcome, " + result.name;
+        saveSession(result);
       } else {
         document.getElementById("message").textContent = "Registration failed.";
       }
