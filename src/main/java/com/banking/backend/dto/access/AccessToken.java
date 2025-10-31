@@ -22,7 +22,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AccessToken {
-    String SessionToken;
+    String sessionToken;
     String name;
     String familyName;
     ArrayList<Account> accounts;

@@ -11,7 +11,9 @@ DROP TABLE IF EXISTS accounts CASCADE;
 
 DROP TABLE IF EXISTS master_record CASCADE;
 
-DROP TYPE IF EXISTS transaction_type;
+DROP TABLE IF EXISTS active_sessions CASCADE;
+
+DROP TYPE IF EXISTS transaction_type CASCADE;
 
 -- ============================
 -- Necessary enums and types

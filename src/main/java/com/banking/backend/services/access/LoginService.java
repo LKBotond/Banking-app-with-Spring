@@ -1,5 +1,7 @@
 package com.banking.backend.services.access;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 //Spring Specific
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,10 +44,12 @@ public class LoginService {
     LoginDao loginDao;
     AccountDAO accountDao;
 
+    private static final Logger log = LoggerFactory.getLogger(LoginService.class);
+
     // Main
     @Transactional
     public AccessToken login(LoginRequestDTO request) {
-
+        log.info("Login service called");
         User user = authenticateUser(request);
         try {
             setAccountsForUser(user);
