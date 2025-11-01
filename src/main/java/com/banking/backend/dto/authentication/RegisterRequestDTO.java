@@ -2,7 +2,6 @@ package com.banking.backend.dto.authentication;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Data transfer object for registration requests.
@@ -17,7 +16,6 @@ import lombok.NoArgsConstructor;
  * </ul>
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequestDTO {
     String email;

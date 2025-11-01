@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * Data transfer object for login requests.
+ * Data transfer object for deletion requests.
  * <p>
  * Contains:
  * </p>
