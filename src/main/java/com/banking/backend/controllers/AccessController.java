@@ -87,9 +87,9 @@ public class AccessController {
     public ResponseEntity<String> logoutUser(@RequestBody LogoutRequestDTO logoutRequest) {
         try {
             logoutService.logout(logoutRequest);
-            return ResponseEntity.ok("Logout succesfull");
+            return ResponseEntity.ok("success");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 

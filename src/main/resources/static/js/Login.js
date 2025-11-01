@@ -1,4 +1,4 @@
-import { saveSession } from "./Helpers.js";
+import { saveSession } from "./helpers/Helpers.js";
 document
   .getElementById("loginForm")
   .addEventListener("submit", async (event) => {
