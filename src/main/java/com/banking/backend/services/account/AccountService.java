@@ -1,6 +1,7 @@
 package com.banking.backend.services.account;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,8 @@ public class AccountService {
     private final AccountDAO accountDAO;
     private final DeletionDao deletionDao;
 
-    public void createAccount(Long userID) {
-        accountDAO.create(userID);
+    public Account createAccount(Long userID) {
+        return accountDAO.create(userID);
     }
 
     public void deleteAccount(Long accountID) {
@@ -29,5 +30,9 @@ public class AccountService {
         Account account = accountDAO.getFundsbyAccountID(accountId).orElseThrow(AccountNotFoundException::new);
         return account.getBalance();
 
+    }
+
+    public List<Account> getAccounts(long userId) {
+        return accountDAO.getAccountsByUserID(userId).orElseThrow(AccountNotFoundException::new);
     }
 }

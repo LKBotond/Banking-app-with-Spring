@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.banking.backend.dao.sessions.ActiveSessionsDao;
 import com.banking.backend.dto.access.AccessToken;
+import com.banking.backend.exceptions.InvalidSessionException;
 import com.banking.backend.services.security.Argon2KDF;
 
 import lombok.AllArgsConstructor;
@@ -44,13 +45,20 @@ public class SessionServiceImpl implements SessionService {
         this.sessionDao.deleteActiveSession(sessionToken);
     }
 
+    public Long getUserIdBySession(String sessionToken) {
+        return sessionDao.getUserIdbySessionId(sessionToken).orElseThrow(InvalidSessionException::new);
+    }
+
+    
+
     private String createSessionString() {
         return Base64.getEncoder().encodeToString(this.argon2KDF.getRandom(TOKEN_BYTES));
     }
 
     private Long lookupInDataBase(String sessionToken) {
-        return this.sessionDao.getUsersLoginId(sessionToken).orElse(null);
+        return this.sessionDao.getUsersLoginId(sessionToken).orElseThrow(InvalidSessionException::new);
     }
+
     private void updateCache(String sessionToken, Long loginId) {
         this.sessionCache.addSession(sessionToken, loginId);
     }

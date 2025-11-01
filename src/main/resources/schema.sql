@@ -68,6 +68,7 @@ COMMENT ON TABLE accounts IS 'Stores financial account data for users.';
 COMMENT ON COLUMN accounts.user_id IS 'Reference to the owning user.';
 COMMENT ON COLUMN accounts.funds IS 'Current balance of the account.';
 
+CREATE INDEX idx_account ON accounts (id);
 CREATE INDEX idx_user ON accounts (user_id);
 
 -- ============================

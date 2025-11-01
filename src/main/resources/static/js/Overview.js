@@ -36,3 +36,20 @@ async function processLogout(accessToken) {
   }
 }
 
+async function fetchAccounts(accessToken) {
+  try {
+    const response = await fetch("/business/getAccounts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(accessToken),
+    });
+    console.log("Response status:", response.status);
+    if (response.ok) {
+     
+    } else {
+      alert("DAFUQ");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}

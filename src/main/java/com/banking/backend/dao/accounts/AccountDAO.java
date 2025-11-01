@@ -8,7 +8,7 @@ import com.banking.backend.domain.accounts.Account;
 
 public interface AccountDAO {
 
-    void create(long userID);
+    Account create(long userID);
 
     Optional<Account> getFundsbyAccountID(long accountID);
 
