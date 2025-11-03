@@ -1,4 +1,4 @@
-import { saveSession } from "./Helpers.js";
+import { saveSession } from "./helpers/Helpers.js";
 document
   .getElementById("registerForm")
   .addEventListener("submit", async (event) => {
@@ -23,6 +23,7 @@ document
         document.getElementById("message").textContent =
           "Registered successfully! Welcome, " + result.name;
         saveSession(result);
+        window.location.href="http://localhost:8080/pages/Overview.html"
       } else {
         document.getElementById("message").textContent = "Registration failed.";
       }

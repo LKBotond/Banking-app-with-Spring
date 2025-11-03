@@ -77,6 +77,6 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
     private RowMapper<Account> accountRowMapper() {
         return (rs, _) -> new Account(
                 rs.getLong("id"),
-                rs.getBigDecimal("fund"));
+                rs.getBigDecimal("funds"));
     }
 }

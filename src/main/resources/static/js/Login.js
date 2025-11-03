@@ -21,8 +21,9 @@ document
         document.getElementById("message").textContent =
           "Login successfull! Welcome, " + result.name;
         saveSession(result);
+        window.location.href = "http://localhost:8080/pages/Overview.html";
       } else {
-        document.getElementById("message").textContent = "Registration failed.";
+        document.getElementById("message").textContent = "Login failed.";
       }
     } catch (err) {
       console.error(err);

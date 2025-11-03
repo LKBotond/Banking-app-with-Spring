@@ -1,5 +1,7 @@
 package com.banking.backend.services.session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.banking.backend.dao.sessions.ActiveSessionsDao;
@@ -17,14 +19,19 @@ public class SessionServiceImpl implements SessionService {
     private final Argon2KDF argon2KDF;
     private static final int TOKEN_BYTES = 32;
     private final SessionCache sessionCache;
+    private static final Logger log = LoggerFactory.getLogger(SessionServiceImpl.class);
 
     public boolean validateSession(String sessionToken) {
+        log.info("Session validation reached");
         if (sessionToken == null || sessionToken.isBlank()) {
+            log.info("invalid session");
             return false;
         }
         if (sessionCache.getSession(sessionToken) != null) {
+            log.info("valid session");
             return true;
         }
+        log.info("Querying db for session");
         Long loginId = lookupInDataBase(sessionToken);
         if (loginId != null) {
             updateCache(sessionToken, loginId);
@@ -49,10 +56,8 @@ public class SessionServiceImpl implements SessionService {
         return sessionDao.getUserIdbySessionId(sessionToken).orElseThrow(InvalidSessionException::new);
     }
 
-    
-
     private String createSessionString() {
-        return Base64.getEncoder().encodeToString(this.argon2KDF.getRandom(TOKEN_BYTES));
+        return Base64.getUrlEncoder().encodeToString(this.argon2KDF.getRandom(TOKEN_BYTES));
     }
 
     private Long lookupInDataBase(String sessionToken) {
