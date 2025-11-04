@@ -40,11 +40,11 @@
 ### Create Rest Endpoints:
 
 1. Authentication:
-   - [ ] Registration
-   - [ ] Login
+   - [x] Registration
+   - [x] Login
    - [ ] Credential modification
 2. Transaction:
-   - [ ] DData visualization
+   - [ ] Data visualization
    - [ ] Transfer
    - [ ] Withdrawal
    - [ ] Deposit
@@ -54,8 +54,7 @@
       this will couple the logins table's session_id and a random UUID in a tight coupling
 - [x] add sql queries to access and modify said table
 - [x] add daos to implement said queries
-- [ ] refractor authentication services
-- [ ] implement rest access ponts
+- [x] refractor authentication services
+- [x] implement rest access ponts
 - [ ] Update sessionCache for domains which store minimal data for validation purposes to avoid excesive db lookups. 
  
- ## update transaction logic to select both accounts for locking

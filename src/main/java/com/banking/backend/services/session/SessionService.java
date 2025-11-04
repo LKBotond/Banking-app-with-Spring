@@ -10,4 +10,6 @@ public interface SessionService {
 
     public void endSession(String sessionToken);
 
+    public Long getUserIdBySession(String sessionToken);
+
 }

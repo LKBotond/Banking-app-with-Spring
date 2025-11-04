@@ -84,12 +84,16 @@ public class AccessController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logoutUser(@RequestBody LogoutRequestDTO logoutRequest) {
+    public ResponseEntity<String> logoutUser(@RequestBody AccessToken accessToken) {
+        log.info("AccessToken: {}", accessToken);
+        LogoutRequestDTO logoutRequest = new LogoutRequestDTO(accessToken.getSessionToken());
+        log.info("Got request: {}", logoutRequest);
         try {
             logoutService.logout(logoutRequest);
-            return ResponseEntity.ok("Logout succesfull");
+            return ResponseEntity.ok("success");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            log.info("exception: {}", e);
+            return ResponseEntity.internalServerError().build();
         }
     }
 

@@ -24,8 +24,9 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
     }
 
     @Override
-    public void create(long userID) {
-        updateDB(DBQueries.CREATE_ACCOUNT, userID);
+    public Account create(long userID) {
+        return getSingleRow(DBQueries.CREATE_ACCOUNT, accountRowMapper(), userID)
+                .orElseThrow(() -> new DataBaseAccessException("no access to the db", null));
     }
 
     @Override
@@ -76,6 +77,6 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
     private RowMapper<Account> accountRowMapper() {
         return (rs, _) -> new Account(
                 rs.getLong("id"),
-                rs.getBigDecimal("fund"));
+                rs.getBigDecimal("funds"));
     }
 }
