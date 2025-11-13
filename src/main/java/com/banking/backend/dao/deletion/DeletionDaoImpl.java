@@ -19,7 +19,6 @@ public class DeletionDaoImpl extends BaseDaoImpl implements DeletionDao {
     }
 
     public void deleteAccount(long accountID) {
-        System.out.println("deletion Query: " + DBQueries.DELETE_ACCOUNT);
         updateDB(DBQueries.DELETE_ACCOUNT, accountID);
     }
 }

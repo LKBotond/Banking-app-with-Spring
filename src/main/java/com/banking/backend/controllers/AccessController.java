@@ -78,7 +78,6 @@ public class AccessController {
 
     @PostMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestBody DeletionRequestDTO deletionRequest) {
-        log.info("Deletion request called with deletiopnToken:{}", deletionRequest);
         try {
             log.info("try block reached");
             deletionService.deleteUser(deletionRequest);
