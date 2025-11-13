@@ -11,3 +11,5 @@ public interface TransactionService {
     public void withdraw(long accountID, BigDecimal fubnds);
 
 }
+
+//NEEED TO CREATE LOGIC FOR CHECKING THE STATUS FLAG FOR ACCOUNTS

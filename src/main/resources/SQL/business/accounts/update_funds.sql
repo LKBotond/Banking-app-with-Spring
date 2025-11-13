@@ -2,4 +2,5 @@ UPDATE accounts
 SET
     funds = ?
 WHERE
-    id = ?;
+    id = ?
+    AND status = 'ACTIVE';

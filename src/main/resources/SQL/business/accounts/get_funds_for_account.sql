@@ -3,4 +3,5 @@ SELECT
 FROM
     accounts
 WHERE
-    id = ?;
+    id = ?
+    AND status = 'ACTIVE';
