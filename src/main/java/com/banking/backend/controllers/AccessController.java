@@ -49,8 +49,11 @@ public class AccessController {
             log.info("Email already in database");
             return ResponseEntity.badRequest().build();
         } catch (DataBaseAccessException e) {
-            log.info("Database can't be reached");
+            log.info("Database can't be reached because: {}", e);
             return ResponseEntity.internalServerError().build();
+        } catch (Exception e) {
+            log.info("Something went wrong: {}", e);
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -75,10 +78,13 @@ public class AccessController {
 
     @PostMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestBody DeletionRequestDTO deletionRequest) {
+        log.info("Deletion request called with deletiopnToken:{}", deletionRequest);
         try {
+            log.info("try block reached");
             deletionService.deleteUser(deletionRequest);
-            return ResponseEntity.ok("User deleted successfully");
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
+            log.info("something went wrong :{}", e);
             return ResponseEntity.badRequest().build();
         }
     }

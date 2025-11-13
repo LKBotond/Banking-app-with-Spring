@@ -50,7 +50,6 @@ public class DeletionService {
 
         deletionDao.deleteUser(userId);
         activeSessionsDao.deleteActiveSession(request.getSessionId());
-
     }
 
     private ArrayList<Account> getAccounts(long userId) {
