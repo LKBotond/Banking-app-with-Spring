@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="module" src="../js/Deletion.js"></script>
+    <title>Deletion</title>
+  </head>
+  <body>
+    <h1>Delete Me</h1>
+    <p>
+      After you fill out your password, your User and all of your accounts will
+      be deleted
+    </p>
+    <p>
+      <strong>THIS WILL NOT DELETE YOUR TRANSACTION RECORDS</strong> those are
+      kept for 30 years for legal reasons, take it up with the state...
+    </p>
+    <form id="deletionForm">
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        required
+      /><br />
+      <button type="submit">DeleteMe</button>
+    </form>
+
+    <p id="message"></p>
+  </body>
+</html>

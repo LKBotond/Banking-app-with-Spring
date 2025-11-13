@@ -37,6 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void transaction(long senderID, long receiverID, BigDecimal funds) {
+        //lock the rows Tard List<Account>
         updateBalance(senderID, funds.negate());
         updateBalance(receiverID, funds);
         masterRecordDao.recordTransfer(senderID, receiverID, funds);

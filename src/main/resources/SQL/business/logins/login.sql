@@ -1,4 +1,4 @@
 INSERT INTO
-    logins (user_id, status)
+    logins (user_id)
 VALUES
-    (?, true) RETURNING id;
+    (?) RETURNING id;
