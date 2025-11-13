@@ -1,6 +1,7 @@
 package com.banking.backend.services.transactions.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +23,24 @@ public class TransactionServiceImpl implements TransactionService {
         this.masterRecordDao = masterRecordDao;
     }
 
+    @Override
+    public void transaction(long senderID, long receiverID, BigDecimal funds) {
+        lockRows(senderID, receiverID);
+        updateBalance(senderID, funds.negate());
+        updateBalance(receiverID, funds);
+        masterRecordDao.recordTransfer(senderID, receiverID, funds);
+    }
+
+    @Override
+    public void deposit(long accountID, BigDecimal funds) {
+        updateBalance(accountID, funds);
+    }
+
+    @Override
+    public void withdraw(long accountID, BigDecimal funds) {
+        updateBalance(accountID, funds.negate());
+    }
+
     private void updateBalance(long accountID, BigDecimal funds) {
         Optional<Account> potentialAccount = accountDAO.getFundsbyAccountID(accountID);
         if (potentialAccount.isEmpty()) {
@@ -35,21 +54,23 @@ public class TransactionServiceImpl implements TransactionService {
         accountDAO.updateFundsForAccount(balance, account.getAccountID());
     }
 
-    @Override
-    public void transaction(long senderID, long receiverID, BigDecimal funds) {
-        //lock the rows Tard List<Account>
-        updateBalance(senderID, funds.negate());
-        updateBalance(receiverID, funds);
-        masterRecordDao.recordTransfer(senderID, receiverID, funds);
+    private void lockRows(long sender, long receiver) {
+        List<Account> participants = accountDAO.lockAndGetDataForTransaction(sender, receiver);
+        if (participants == null || participants.size() < 2) {
+            throw new RuntimeException("A party is missing");
+        }
     }
 
-    @Override
-    public void deposit(long accountID, BigDecimal fubnds) {
-        updateBalance(accountID, fubnds);
-    }
-
-    @Override
-    public void withdraw(long accountID, BigDecimal fubnds) {
-        updateBalance(accountID, fubnds.negate());
-    }
+    // lock the rows Tard Also separate it into a specific function
+    /**
+     * PLAN:
+     * have function lockRows(long sender, long receiver)
+     * have it return an exception for suspended/deleted
+     * have it return an exception for not found
+     * have it return two accounts in a list for found and locked
+     * 
+     * modify transaction function via this, i get the lockable accounts via the
+     * lockRows and update the balances,
+     * 
+     */
 }
