@@ -20,6 +20,6 @@ public interface AccountDAO {
 
     void updateFundsForAccount(BigDecimal funds, long accountID);
 
-    List<Account> lockAndGetDataForTransaction(long sender, long receiver);
+    Account getAccountForTransaction(long accountId);
 
 }

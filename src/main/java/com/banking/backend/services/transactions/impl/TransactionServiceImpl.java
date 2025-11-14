@@ -1,8 +1,6 @@
 package com.banking.backend.services.transactions.impl;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,52 +23,45 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void transaction(long senderID, long receiverID, BigDecimal funds) {
-        lockRows(senderID, receiverID);
-        updateBalance(senderID, funds.negate());
-        updateBalance(receiverID, funds);
+        long first = Math.min(senderID, receiverID);
+        long second = Math.max(senderID, receiverID);
+
+        Account acc1 = lockRow(first);
+        Account acc2 = lockRow(second);
+
+        Account sender = (acc1.getAccountID() == senderID) ? acc1 : acc2;
+        Account receiver = (sender == acc1) ? acc2 : acc1;
+
+        updateBalance(sender, funds.negate());
+        updateBalance(receiver, funds);
         masterRecordDao.recordTransfer(senderID, receiverID, funds);
     }
 
     @Override
     public void deposit(long accountID, BigDecimal funds) {
-        updateBalance(accountID, funds);
+        Account locked = lockRow(accountID);
+        updateBalance(locked, funds);
     }
 
     @Override
     public void withdraw(long accountID, BigDecimal funds) {
-        updateBalance(accountID, funds.negate());
+        Account locked = lockRow(accountID);
+        updateBalance(locked, funds.negate());
     }
 
-    private void updateBalance(long accountID, BigDecimal funds) {
-        Optional<Account> potentialAccount = accountDAO.getFundsbyAccountID(accountID);
-        if (potentialAccount.isEmpty()) {
-            throw new RuntimeException("Account not found: " + accountID);
-        }
-        Account account = potentialAccount.get();
+    private void updateBalance(Account account, BigDecimal funds) {
         BigDecimal balance = account.getBalance().add(funds);
         if (balance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("Insufficient funds for account: " + accountID);
+            throw new RuntimeException("Insufficient funds for account: " + account.getAccountID());
         }
         accountDAO.updateFundsForAccount(balance, account.getAccountID());
     }
 
-    private void lockRows(long sender, long receiver) {
-        List<Account> participants = accountDAO.lockAndGetDataForTransaction(sender, receiver);
-        if (participants == null || participants.size() < 2) {
+    private Account lockRow(long accountId) {
+        Account locked = accountDAO.getAccountForTransaction(accountId);
+        if (locked == null) {
             throw new RuntimeException("A party is missing");
         }
+        return locked;
     }
-
-    // lock the rows Tard Also separate it into a specific function
-    /**
-     * PLAN:
-     * have function lockRows(long sender, long receiver)
-     * have it return an exception for suspended/deleted
-     * have it return an exception for not found
-     * have it return two accounts in a list for found and locked
-     * 
-     * modify transaction function via this, i get the lockable accounts via the
-     * lockRows and update the balances,
-     * 
-     */
 }

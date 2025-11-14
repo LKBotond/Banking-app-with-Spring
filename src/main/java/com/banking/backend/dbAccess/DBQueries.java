@@ -24,7 +24,7 @@ public final class DBQueries {
     public static final String GET_FUNDS_FOR_ACCOUNT = SQLFileReader.readSQL("SQL/business/accounts/get_funds_for_account.sql");
     public static final String GET_ALL_ACCOUNTS_FOR_USER = SQLFileReader.readSQL("SQL/business/accounts/get_all_accounts_by_user_id.sql");
     public static final String UPDATE_FUNDS_FOR_ACCOUNT_ID = SQLFileReader.readSQL("SQL/business/accounts/update_funds.sql");
-    public static final String LOCK_FOR_TRANSACTION = SQLFileReader.readSQL("SQL/business/accounts/lock_accounts_for_transaction.sql");
+    public static final String LOCK_FOR_TRANSACTION = SQLFileReader.readSQL("SQL/business/accounts/lock_account_for_transaction.sql");
     
     //Login specific:
     public static final String LOGIN = SQLFileReader.readSQL("SQL/business/logins/login.sql");
