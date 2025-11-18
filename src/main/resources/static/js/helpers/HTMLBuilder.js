@@ -25,19 +25,24 @@ class HTMLBuilder {
     if (parent) parent.append(element);
   }
 
-buildAccount(account, index) {
+  buildAccount(account, index) {
     const accountIdx = "account" + index;
     const holder = this.createDiv(accountIdx, "account");
     const id = this.createParagraph(account.accountID, "id");
     const balance = this.createParagraph(account.balance, "balance");
-    const transferBTN = this.createButton("Transfer", "transfer", "nav");
-    const detailsBTN = this.createButton("Details", "details", "nav");
-    
+    const transferBTN = this.createButton("Transfer", "transfer"+index, "nav");
+    transferBTN.dataset.accountId = account.accountID;
+    const depositBTN = this.createButton("Deposit", "deposit"+index, "nav");
+    depositBTN.dataset.accountId = account.accountID;
+    const detailsBTN = this.createButton("Details", "details"+index, "nav");
+    detailsBTN.dataset.accountId = account.accountID;
+
     holder.appendChild(id);
     holder.appendChild(balance);
     holder.appendChild(transferBTN);
+    holder.appendChild(depositBTN);
     holder.appendChild(detailsBTN);
-    
+
     return holder;
   }
 }

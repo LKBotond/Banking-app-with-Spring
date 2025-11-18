@@ -13,6 +13,7 @@ import com.banking.backend.exceptions.LoginIdNotFoundException;
 import com.banking.backend.exceptions.UserAlreadyExistsException;
 import com.banking.backend.exceptions.UserNotFoundException;
 import com.banking.backend.exceptions.WrongPasswordException;
+import com.banking.backend.responses.StatusResponse;
 import com.banking.backend.services.access.DeletionService;
 import com.banking.backend.services.access.LoginService;
 import com.banking.backend.services.access.LogoutService;
@@ -77,11 +78,11 @@ public class AccessController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestBody DeletionRequestDTO deletionRequest) {
+    public ResponseEntity<StatusResponse> deleteUser(@RequestBody DeletionRequestDTO deletionRequest) {
         try {
             log.info("try block reached");
             deletionService.deleteUser(deletionRequest);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new StatusResponse(true));
         } catch (Exception e) {
             log.info("something went wrong :{}", e);
             return ResponseEntity.badRequest().build();
@@ -89,13 +90,13 @@ public class AccessController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logoutUser(@RequestBody AccessToken accessToken) {
+    public ResponseEntity<StatusResponse> logoutUser(@RequestBody AccessToken accessToken) {
         log.info("AccessToken: {}", accessToken);
         LogoutRequestDTO logoutRequest = new LogoutRequestDTO(accessToken.getSessionToken());
         log.info("Got request: {}", logoutRequest);
         try {
             logoutService.logout(logoutRequest);
-            return ResponseEntity.ok("success");
+            return ResponseEntity.ok(new StatusResponse(true));
         } catch (Exception e) {
             log.info("exception: {}", e);
             return ResponseEntity.internalServerError().build();
