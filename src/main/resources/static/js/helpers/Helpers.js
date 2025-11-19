@@ -20,8 +20,20 @@ export function redirect(target) {
   window.location.href = target;
 }
 
-export function on(id, event, handler) {
-  document.getElementById(id).addEventListener(event, (e) => {
-    handler(e);
-  });
+export function on(target, event, handler) {
+  let elements;
+
+  if (target instanceof Element || target === document || target === window) {
+    elements = [target];
+  } else if (typeof target === "string") {
+    const el = document.getElementById(target);
+    if (!el) {
+      throw new Error(`Element with ID "${target}" not found`);
+    }
+    elements = [el];
+  } else {
+    throw new Error("Invalid target for on()");
+  }
+
+  elements.forEach((el) => el.addEventListener(event, handler));
 }

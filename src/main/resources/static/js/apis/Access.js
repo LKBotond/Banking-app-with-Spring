@@ -5,3 +5,6 @@ export const handleLogin = (loginRequest) =>
 
 export const handleRegistration = (registrationRequest) =>
   handleOperation("/access/register", registrationRequest);
+
+export const handleDeletion = (deletionRequest) =>
+  handleOperation("/access/delete", deletionRequest);

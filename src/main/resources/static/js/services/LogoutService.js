@@ -1,8 +1,7 @@
 import { handleLogout } from "../apis/Logout.js";
 import { loadSession } from "../helpers/Helpers.js";
 
-export async function processLogout() {
-  const accessToken = loadSession();
+export async function processLogout(accessToken) {
   try {
     const response = await handleLogout(accessToken);
     console.log("Response status:", response.status);
