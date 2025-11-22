@@ -1,5 +1,4 @@
 import { handleLogout } from "../apis/Logout.js";
-import { loadSession } from "../helpers/Helpers.js";
 
 export async function processLogout(accessToken) {
   try {
@@ -15,4 +14,3 @@ export async function processLogout(accessToken) {
   }
 }
 
-//only need to create logout dtros on the backend

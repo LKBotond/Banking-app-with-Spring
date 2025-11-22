@@ -38,9 +38,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void deposit(long accountID, BigDecimal funds) {
+    public Account deposit(long accountID, BigDecimal funds) {
         Account locked = lockRow(accountID);
         updateBalance(locked, funds);
+        return locked;
     }
 
     @Override

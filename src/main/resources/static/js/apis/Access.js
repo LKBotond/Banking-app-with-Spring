@@ -1,10 +1,10 @@
-import { handleOperation } from "./Call.js";
+import { postJsonRequest } from "./Call.js";
 
-export const handleLogin = (loginRequest) =>
-  handleOperation("/access/login", loginRequest);
+export const loginUser = (loginRequest) =>
+  postJsonRequest("/access/login", loginRequest);
 
-export const handleRegistration = (registrationRequest) =>
-  handleOperation("/access/register", registrationRequest);
+export const registerUser = (registrationRequest) =>
+  postJsonRequest("/access/register", registrationRequest);
 
-export const handleDeletion = (deletionRequest) =>
-  handleOperation("/access/delete", deletionRequest);
+export const deleteUser = (deletionRequest) =>
+  postJsonRequest("/access/delete", deletionRequest);

@@ -9,3 +9,19 @@ export function serializeFormToJSON(form) {
   });
   return data;
 }
+
+export function getButtonsByIdPrefix(prefix) {
+  const selector = `button[id^="${prefix}"]`;
+  const buttons = document.querySelectorAll(selector);
+  return buttons;
+}
+
+export function massAddEventListener(elements, event, handler) {
+  for (let element of elements) {
+    element.addEventListener(event, handler);
+  }
+}
+
+export function extractIdFromEvent(event) {
+  return event.currentTarget.dataset.accountId;
+}

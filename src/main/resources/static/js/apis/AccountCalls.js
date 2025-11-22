@@ -1,16 +1,16 @@
-import { handleOperation } from "./Call.js";
+import { postJsonRequest } from "./Call.js";
 
-export const handleDeposit = (depositRequest) =>
-  handleOperation("accounts/deposit", depositRequest);
+export const createAccount = (accessToken) =>
+  postJsonRequest("/accounts/create", accessToken);
 
-export const handleCreation = (accessToken) =>
-  handleOperation("/accounts/create", accessToken);
+export const depositFunds = (depositRequest) =>
+  postJsonRequest("/accounts/deposit", depositRequest);
 
-export const handleWithdrawal = (withdrawalRequest) =>
-  handleOperation("/accounts/withdraw", withdrawalRequest);
+export const withdrawFunds = (withdrawalRequest) =>
+  postJsonRequest("/accounts/withdraw", withdrawalRequest);
 
-export const handleTransfer = (transferRequest) =>
-  handleOperation("/accounts/transfer", transferRequest);
+export const transferFunds = (transferRequest) =>
+  postJsonRequest("/accounts/transfer", transferRequest);
 
-export const handleAccountDataRequest = (accessToken) =>
-  handleOperation("/accounts/getAccounts", accessToken);
+export const getAccounts = (accessToken) =>
+  postJsonRequest("/accounts/getAccounts", accessToken);

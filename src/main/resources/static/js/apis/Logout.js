@@ -1,3 +1,3 @@
-import { handleOperation } from "./Call.js";
-export const handleLogout = (logOutRequest) =>
-  handleOperation("/access/logout", logOutRequest);
+import { postJsonRequest } from "./Call.js";
+export const logoutUser = (logOutRequest) =>
+  postJsonRequest("/access/logout", logOutRequest);

@@ -39,20 +39,12 @@ public class AccountController {
             log.info("sessionToken validated: {}", accessToken);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        try {
-            log.info("Creation try chain called");
-            long userId = sessionService.getUserIdBySession(accessToken.getSessionToken());
-            log.info("userID:{}", userId);
-            Account account = accountService.createAccount(userId);
-            log.info("Account id:{}", account.getAccountID());
-            return ResponseEntity.ok().body(account);
-        } catch (DataBaseAccessException e) {
-            log.error("Database access failed", e);
-            return ResponseEntity.internalServerError().build();
-        } catch (InvalidSessionException e) {
-            log.error("Invalid session", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        log.info("Creation try chain called");
+        long userId = sessionService.getUserIdBySession(accessToken.getSessionToken());
+        log.info("userID:{}", userId);
+        Account account = accountService.createAccount(userId);
+        log.info("Account id:{}", account.getAccountID());
+        return ResponseEntity.ok().body(account);
     }
 
     @PostMapping("/getAccounts")
@@ -62,36 +54,22 @@ public class AccountController {
             log.info("sessionToken validated: {}", accessToken.getSessionToken());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        try {
-            log.info("getAccount try Chain reached");
-            long userId = sessionService.getUserIdBySession(accessToken.getSessionToken());
-            log.info("got UserID: {}", userId);
-            List<Account> accounts = accountService.getAccounts(userId);
-            log.info("got accounts: {}", accounts);
-            return ResponseEntity.ok().body(accounts);
-        } catch (DataBaseAccessException e) {
-            log.error("Something went wrong with the db", e);
-            return ResponseEntity.internalServerError().build();
-        } catch (InvalidSessionException e) {
-            log.error("Invalid session", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (AccountNotFoundException e) {
-            log.error("Account Not Found", e);
-            return ResponseEntity.ok().body(null);
-        }
+        log.info("getAccount try Chain reached");
+        long userId = sessionService.getUserIdBySession(accessToken.getSessionToken());
+        log.info("got UserID: {}", userId);
+        List<Account> accounts = accountService.getAccounts(userId);
+        log.info("got accounts: {}", accounts);
+        return ResponseEntity.ok().body(accounts);
     }
 
     @PostMapping("/deposit")
     public ResponseEntity<Account> deposit(@RequestBody OperationDTO depositRequest) {
+        log.info("got deposit request: {}", depositRequest);
         if (!sessionService.validateSession(depositRequest.getSessionToken())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        try {
-            transactionServiceImpl.deposit(depositRequest.getAccountId(), depositRequest.getSum());
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        Account updated = transactionServiceImpl.deposit(depositRequest.getAccountId(), depositRequest.getSum());
+        return ResponseEntity.ok(updated);
     }
 
     @PostMapping("/withdraw")
@@ -99,12 +77,8 @@ public class AccountController {
         if (!sessionService.validateSession(withdrawalRequest.getSessionToken())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        try {
-            transactionServiceImpl.withdraw(withdrawalRequest.getAccountId(), withdrawalRequest.getSum());
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        transactionServiceImpl.withdraw(withdrawalRequest.getAccountId(), withdrawalRequest.getSum());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/transfer")
@@ -112,13 +86,9 @@ public class AccountController {
         if (!sessionService.validateSession(transferRequest.getSessionToken())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        try {
-            transactionServiceImpl.transaction(transferRequest.getSender(), transferRequest.getReceiver(),
-                    transferRequest.getSum());
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        transactionServiceImpl.transaction(transferRequest.getSender(), transferRequest.getReceiver(),
+                transferRequest.getSum());
+        return ResponseEntity.ok().build();
     }
 
 }

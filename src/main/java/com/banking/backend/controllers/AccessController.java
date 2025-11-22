@@ -42,65 +42,31 @@ public class AccessController {
     @PostMapping("/register")
     public ResponseEntity<AccessToken> registerUser(@RequestBody RegisterRequestDTO registrationRequest) {
         log.info("Register endpoint called");
-        try {
-            AccessToken accessToken = registrationService.register(registrationRequest);
-            log.info("Got accessToken");
-            return ResponseEntity.ok(accessToken);
-        } catch (UserAlreadyExistsException exception) {
-            log.info("Email already in database");
-            return ResponseEntity.badRequest().build();
-        } catch (DataBaseAccessException e) {
-            log.info("Database can't be reached because: {}", e);
-            return ResponseEntity.internalServerError().build();
-        } catch (Exception e) {
-            log.info("Something went wrong: {}", e);
-            return ResponseEntity.badRequest().build();
-        }
+        AccessToken accessToken = registrationService.register(registrationRequest);
+        log.info("Got accessToken");
+        return ResponseEntity.ok(accessToken);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AccessToken> loginUser(@RequestBody LoginRequestDTO loginRequest) {
         log.info("Login endpoint called");
-        try {
-            AccessToken accessToken = loginService.login(loginRequest);
-            log.info("Got accessToken");
-            return ResponseEntity.ok(accessToken);
-        } catch (WrongPasswordException e) {
-            log.info("Wrong password");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (LoginIdNotFoundException e) {
-            log.info("Database can't be reached");
-            return ResponseEntity.internalServerError().build();
-        } catch (UserNotFoundException e) {
-            log.info("User not found");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        AccessToken accessToken = loginService.login(loginRequest);
+        log.info("Got accessToken");
+        return ResponseEntity.ok(accessToken);
     }
 
     @PostMapping("/delete")
     public ResponseEntity<StatusResponse> deleteUser(@RequestBody DeletionRequestDTO deletionRequest) {
-        try {
-            log.info("try block reached");
-            deletionService.deleteUser(deletionRequest);
-            return ResponseEntity.ok(new StatusResponse(true));
-        } catch (Exception e) {
-            log.info("something went wrong :{}", e);
-            return ResponseEntity.badRequest().build();
-        }
+        log.info("Delete user called");
+        deletionService.deleteUser(deletionRequest);
+        return ResponseEntity.ok(new StatusResponse(true));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<StatusResponse> logoutUser(@RequestBody AccessToken accessToken) {
         log.info("AccessToken: {}", accessToken);
         LogoutRequestDTO logoutRequest = new LogoutRequestDTO(accessToken.getSessionToken());
-        log.info("Got request: {}", logoutRequest);
-        try {
-            logoutService.logout(logoutRequest);
-            return ResponseEntity.ok(new StatusResponse(true));
-        } catch (Exception e) {
-            log.info("exception: {}", e);
-            return ResponseEntity.internalServerError().build();
-        }
+        logoutService.logout(logoutRequest);
+        return ResponseEntity.ok(new StatusResponse(true));
     }
-
 }
