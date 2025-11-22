@@ -4,7 +4,7 @@ import com.banking.backend.dto.access.AccessToken;
 
 public interface SessionService {
 
-    public boolean validateSession(String sessionToken);
+    public void validateSession(String sessionToken);
 
     public void createSessionToken(AccessToken incompleteAccessToken, long loginId);
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,9 +12,6 @@ import com.banking.backend.domain.accounts.Account;
 import com.banking.backend.dto.access.AccessToken;
 import com.banking.backend.dto.transaction.OperationDTO;
 import com.banking.backend.dto.transaction.TransferDTO;
-import com.banking.backend.exceptions.AccountNotFoundException;
-import com.banking.backend.exceptions.DataBaseAccessException;
-import com.banking.backend.exceptions.InvalidSessionException;
 import com.banking.backend.services.account.AccountService;
 import com.banking.backend.services.session.SessionService;
 import com.banking.backend.services.transactions.impl.TransactionServiceImpl;
@@ -35,11 +31,9 @@ public class AccountController {
 
     @PostMapping("/create")
     public ResponseEntity<Account> createAccount(@RequestBody AccessToken accessToken) {
-        if (!sessionService.validateSession(accessToken.getSessionToken())) {
-            log.info("sessionToken validated: {}", accessToken);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        log.info("Creation try chain called");
+        sessionService.validateSession(accessToken.getSessionToken());
+
+        log.info("Creating account");
         long userId = sessionService.getUserIdBySession(accessToken.getSessionToken());
         log.info("userID:{}", userId);
         Account account = accountService.createAccount(userId);
@@ -50,10 +44,8 @@ public class AccountController {
     @PostMapping("/getAccounts")
     public ResponseEntity<List<Account>> getAccounts(@RequestBody AccessToken accessToken) {
         log.info("get Account chain called");
-        if (!sessionService.validateSession(accessToken.getSessionToken())) {
-            log.info("sessionToken validated: {}", accessToken.getSessionToken());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+
+        sessionService.validateSession(accessToken.getSessionToken());
         log.info("getAccount try Chain reached");
         long userId = sessionService.getUserIdBySession(accessToken.getSessionToken());
         log.info("got UserID: {}", userId);
@@ -65,27 +57,22 @@ public class AccountController {
     @PostMapping("/deposit")
     public ResponseEntity<Account> deposit(@RequestBody OperationDTO depositRequest) {
         log.info("got deposit request: {}", depositRequest);
-        if (!sessionService.validateSession(depositRequest.getSessionToken())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+
+        sessionService.validateSession(depositRequest.getSessionToken());
         Account updated = transactionServiceImpl.deposit(depositRequest.getAccountId(), depositRequest.getSum());
         return ResponseEntity.ok(updated);
     }
 
     @PostMapping("/withdraw")
     public ResponseEntity<Account> withdraw(@RequestBody OperationDTO withdrawalRequest) {
-        if (!sessionService.validateSession(withdrawalRequest.getSessionToken())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        sessionService.validateSession(withdrawalRequest.getSessionToken());
         transactionServiceImpl.withdraw(withdrawalRequest.getAccountId(), withdrawalRequest.getSum());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/transfer")
     public ResponseEntity<Account> transfer(@RequestBody TransferDTO transferRequest) {
-        if (!sessionService.validateSession(transferRequest.getSessionToken())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        sessionService.validateSession(transferRequest.getSessionToken());
         transactionServiceImpl.transaction(transferRequest.getSender(), transferRequest.getReceiver(),
                 transferRequest.getSum());
         return ResponseEntity.ok().build();

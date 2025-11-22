@@ -21,23 +21,25 @@ public class SessionServiceImpl implements SessionService {
     private final SessionCache sessionCache;
     private static final Logger log = LoggerFactory.getLogger(SessionServiceImpl.class);
 
-    public boolean validateSession(String sessionToken) {
+    public void validateSession(String sessionToken) {
         log.info("Session validation reached");
         if (sessionToken == null || sessionToken.isBlank()) {
             log.info("invalid session");
-            return false;
+            throw new InvalidSessionException();
         }
-        if (sessionCache.getSession(sessionToken) != null) {
-            log.info("valid session");
-            return true;
-        }
-        log.info("Querying db for session");
-        Long loginId = lookupInDataBase(sessionToken);
-        if (loginId != null) {
+        if (sessionCache.getSession(sessionToken) == null) {
+            log.info("Session not in cache");
+            Long loginId = lookupInDataBase(sessionToken);
+            if (loginId == null) {
+                log.info("Session not found in database");
+                throw new InvalidSessionException();
+            }
+            log.info("session found in db, updating cache");
             updateCache(sessionToken, loginId);
-            return true;
+
+        } else {
+            log.info("Session validated from cache: {}", sessionToken);
         }
-        return false;
     }
 
     public void createSessionToken(AccessToken incompleteAccessToken, long loginId) {
