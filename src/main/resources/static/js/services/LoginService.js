@@ -1,4 +1,4 @@
-import { handleLogin } from "../apis/Access.js";
+import { loginUser } from "../apis/Access.js";
 import { saveSession } from "../helpers/Helpers.js";
 
 export async function processLogin(email, password) {
@@ -7,12 +7,12 @@ export async function processLogin(email, password) {
       email: email,
       password: password,
     };
-    const accessToken = await handleLogin(loginRequest);
-    if (!accessToken) {
+    const accessToken = await loginUser(loginRequest);
+    if (!accessToken.ok) {
       alert("Invalid access Token Login failed");
       return false;
     }
-    saveSession(accessToken);
+    saveSession(accessToken.data);
     return true;
   } catch (e) {
     console.log(e);

@@ -1,4 +1,4 @@
-import { handleDeletion } from "../apis/Access.js";
+import { deleteUser } from "../apis/Access.js";
 import { loadSession } from "../helpers/Helpers.js";
 
 export async function processDeletion(password) {
@@ -8,7 +8,7 @@ export async function processDeletion(password) {
     password: password,
   };
   try {
-    const response = await handleDeletion(deletionRequest);
+    const response = await deleteUser(deletionRequest);
     if (!response.status) {
       alert("deletion failed, db is down");
     } else {

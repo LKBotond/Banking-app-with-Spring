@@ -1,8 +1,8 @@
-import { handleLogout } from "../apis/Logout.js";
+import { logoutUser } from "../apis/Logout.js";
 
 export async function processLogout(accessToken) {
   try {
-    const response = await handleLogout(accessToken);
+    const response = await logoutUser(accessToken);
     console.log("Response status:", response.status);
     if (response.status) {
       window.location.href = "http://localhost:8080/pages/Index.html";
