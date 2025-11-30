@@ -25,3 +25,15 @@ export function massAddEventListener(elements, event, handler) {
 export function extractIdFromEvent(event) {
   return event.currentTarget.dataset.accountId;
 }
+
+export function getFloatFromPrompt() {
+  const input = prompt("Enter a number:");
+  if (input == null) {
+    return null;
+  }
+  const value = parseFloat(input);
+  if (isNaN(value) || !isFinite(value) || value === 0) {
+    return null;
+  }
+  return value;
+}

@@ -22,7 +22,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void transaction(long senderID, long receiverID, BigDecimal funds) {
+    public Account transaction(long senderID, long receiverID, BigDecimal funds) {
         long first = Math.min(senderID, receiverID);
         long second = Math.max(senderID, receiverID);
 
@@ -35,19 +35,26 @@ public class TransactionServiceImpl implements TransactionService {
         updateBalance(sender, funds.negate());
         updateBalance(receiver, funds);
         masterRecordDao.recordTransfer(senderID, receiverID, funds);
+        sender.subtractFromFunds(funds);
+        return sender;
     }
 
     @Override
     public Account deposit(long accountID, BigDecimal funds) {
         Account locked = lockRow(accountID);
         updateBalance(locked, funds);
+        masterRecordDao.recordDeposit(accountID, funds);
+        locked.addToFunds(funds);
         return locked;
     }
 
     @Override
-    public void withdraw(long accountID, BigDecimal funds) {
+    public Account withdraw(long accountID, BigDecimal funds) {
         Account locked = lockRow(accountID);
         updateBalance(locked, funds.negate());
+        masterRecordDao.recordWithdrawal(accountID, funds);
+        locked.subtractFromFunds(funds);
+        return locked;
     }
 
     private void updateBalance(Account account, BigDecimal funds) {

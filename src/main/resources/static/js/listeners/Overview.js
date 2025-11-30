@@ -4,13 +4,7 @@ import {
   processAccounts,
   processCreation,
   buildAccounts,
-  deposit,
 } from "../services/AccountService.js";
-import {
-  extractIdFromEvent,
-  getButtonsByIdPrefix,
-  massAddEventListener,
-} from "../helpers/Scraping.js";
 
 const accessToken = loadSession();
 
@@ -25,28 +19,12 @@ on(document, "DOMContentLoaded", async () => {
   handleLogout();
 
   handleDeletion();
-
-  handleDepositListeners();
 });
 
 async function loadAccounts() {
   const accounts = await processAccounts(accessToken);
   console.log(accounts);
-  buildAccounts(accounts, "accounts");
-  handleDepositListeners();
-}
-
-function handleDepositListeners() {
-  const depositButtons = getButtonsByIdPrefix("deposit");
-  console.log(depositButtons);
-  massAddEventListener(depositButtons, "click", async (event) => {
-    console.log("clicked");
-    const id = extractIdFromEvent(event);
-    console.log(id);
-    const input = prompt("Enter a number:");
-    const num = parseFloat(input);
-    await deposit(accessToken, id, num);
-  });
+  buildAccounts(accessToken, accounts, "accounts");
 }
 
 function handleLogout() {
@@ -73,6 +51,6 @@ function handleCreation() {
       return;
     }
     const accounts = await processCreation(accessToken);
-    buildAccounts(accounts, "accounts");
+    buildAccounts(accessToken, accounts, "accounts");
   });
 }

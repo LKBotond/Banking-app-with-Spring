@@ -1,4 +1,4 @@
-import { redirect } from "../helpers/Helpers";
+import { redirect } from "../helpers/Helpers.js";
 document.getElementById("register").addEventListener("click", (event) => {
   event.preventDefault();
   redirect("http://localhost:8080/pages/Registration.html");

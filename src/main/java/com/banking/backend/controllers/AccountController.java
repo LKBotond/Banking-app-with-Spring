@@ -57,7 +57,6 @@ public class AccountController {
     @PostMapping("/deposit")
     public ResponseEntity<Account> deposit(@RequestBody OperationDTO depositRequest) {
         log.info("got deposit request: {}", depositRequest);
-
         sessionService.validateSession(depositRequest.getSessionToken());
         Account updated = transactionServiceImpl.deposit(depositRequest.getAccountId(), depositRequest.getSum());
         return ResponseEntity.ok(updated);
@@ -66,16 +65,17 @@ public class AccountController {
     @PostMapping("/withdraw")
     public ResponseEntity<Account> withdraw(@RequestBody OperationDTO withdrawalRequest) {
         sessionService.validateSession(withdrawalRequest.getSessionToken());
-        transactionServiceImpl.withdraw(withdrawalRequest.getAccountId(), withdrawalRequest.getSum());
-        return ResponseEntity.ok().build();
+        Account updated = transactionServiceImpl.withdraw(withdrawalRequest.getAccountId(), withdrawalRequest.getSum());
+        return ResponseEntity.ok().body(updated);
     }
 
     @PostMapping("/transfer")
     public ResponseEntity<Account> transfer(@RequestBody TransferDTO transferRequest) {
         sessionService.validateSession(transferRequest.getSessionToken());
-        transactionServiceImpl.transaction(transferRequest.getSender(), transferRequest.getReceiver(),
+        Account updatedSender = transactionServiceImpl.transaction(transferRequest.getSender(),
+                transferRequest.getReceiver(),
                 transferRequest.getSum());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(updatedSender);
     }
 
 }
