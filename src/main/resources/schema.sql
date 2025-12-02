@@ -36,7 +36,7 @@ CREATE TYPE user_status AS ENUM ('ACTIVE', 'SUSPENDED', 'DELETED');
 CREATE TABLE
     users (
         user_id BIGINT GENERATED ALWAYS AS IDENTITY,
-        email TEXT,
+        email TEXT UNIQUE,
         name_encrypted TEXT, -- encrypted version of the user's full name
         salt TEXT,           -- used for password hashing
         iv TEXT,             -- initialization vector for name_encrypted

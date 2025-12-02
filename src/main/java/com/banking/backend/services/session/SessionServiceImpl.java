@@ -30,10 +30,6 @@ public class SessionServiceImpl implements SessionService {
         if (sessionCache.getSession(sessionToken) == null) {
             log.info("Session not in cache");
             Long loginId = lookupInDataBase(sessionToken);
-            if (loginId == null) {
-                log.info("Session not found in database");
-                throw new InvalidSessionException();
-            }
             log.info("session found in db, updating cache");
             updateCache(sessionToken, loginId);
 

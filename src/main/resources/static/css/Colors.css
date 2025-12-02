@@ -1,0 +1,23 @@
+:root {
+  --gray-0: #000000;
+  --gray-1: #3f3f3f;
+  --gray-2: #595959;
+  --gray-3: #818181;
+  --gray-4: #a0a0a0;
+
+  /*semantic mapping*/
+  --color-bg: var(--gray-0);
+  --color-bg-alt: var(--gray-1);
+
+  --color-text: var(--gray-4);
+  --color-text-muted: var(--gray-3);
+  --color-text-disabled: var(--gray-2);
+
+  --color-border: var(--gray-2);
+  --color-border-light: var(--gray-3);
+
+  --color-surface: var(--gray-1);
+  --color-surface-alt: var(--gray-2);
+
+  --accent: #4a90e2;
+}

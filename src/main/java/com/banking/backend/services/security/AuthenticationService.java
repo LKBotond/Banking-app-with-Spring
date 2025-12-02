@@ -8,7 +8,7 @@ import de.mkammerer.argon2.Argon2Factory;
 
 @Service
 public class AuthenticationService {
-    // Argon2-jvm params
+    // Argon2 params
     private static final int ITERATIONS = 4;
     private static final int MEMORY = 131072;
     private static final int PARALLELISM = 2;
