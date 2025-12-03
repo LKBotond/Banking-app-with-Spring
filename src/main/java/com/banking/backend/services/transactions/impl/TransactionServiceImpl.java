@@ -1,7 +1,6 @@
 package com.banking.backend.services.transactions.impl;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +11,6 @@ import com.banking.backend.domain.accounts.Account;
 import com.banking.backend.services.transactions.TransactionService;
 
 @Service
-@Transactional
 public class TransactionServiceImpl implements TransactionService {
     private final AccountDAO accountDAO;
     private final MasterRecordDao masterRecordDao;
@@ -22,33 +20,58 @@ public class TransactionServiceImpl implements TransactionService {
         this.masterRecordDao = masterRecordDao;
     }
 
-    private void updateBalance(long accountID, BigDecimal funds) {
-        Optional<Account> potentialAccount = accountDAO.getFundsbyAccountID(accountID);
-        if (potentialAccount.isEmpty()) {
-            throw new RuntimeException("Account not found: " + accountID);
-        }
-        Account account = potentialAccount.get();
+    @Override
+    @Transactional
+    public Account transaction(long senderID, long receiverID, BigDecimal funds) {
+        long first = Math.min(senderID, receiverID);
+        long second = Math.max(senderID, receiverID);
+
+        Account acc1 = lockRow(first);
+        Account acc2 = lockRow(second);
+
+        Account sender = (acc1.getAccountID() == senderID) ? acc1 : acc2;
+        Account receiver = (sender == acc1) ? acc2 : acc1;
+
+        updateBalance(sender, funds.negate());
+        updateBalance(receiver, funds);
+        masterRecordDao.recordTransfer(senderID, receiverID, funds);
+        sender.subtractFromFunds(funds);
+        return sender;
+    }
+
+    @Override
+    @Transactional
+    public Account deposit(long accountID, BigDecimal funds) {
+        Account locked = lockRow(accountID);
+        updateBalance(locked, funds);
+        masterRecordDao.recordDeposit(accountID, funds);
+        locked.addToFunds(funds);
+        return locked;
+    }
+
+    @Override
+    @Transactional
+    public Account withdraw(long accountID, BigDecimal funds) {
+        Account locked = lockRow(accountID);
+        updateBalance(locked, funds.negate());
+        masterRecordDao.recordWithdrawal(accountID, funds);
+        locked.subtractFromFunds(funds);
+        return locked;
+    }
+
+    private void updateBalance(Account account, BigDecimal funds) {
         BigDecimal balance = account.getBalance().add(funds);
         if (balance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("Insufficient funds for account: " + accountID);
+            throw new RuntimeException("Insufficient funds for account: " + account.getAccountID());
         }
         accountDAO.updateFundsForAccount(balance, account.getAccountID());
     }
 
-    @Override
-    public void transaction(long senderID, long receiverID, BigDecimal funds) {
-        updateBalance(senderID, funds.negate());
-        updateBalance(receiverID, funds);
-        masterRecordDao.recordTransfer(senderID, receiverID, funds);
-    }
-
-    @Override
-    public void deposit(long accountID, BigDecimal fubnds) {
-        updateBalance(accountID, fubnds);
-    }
-
-    @Override
-    public void withdraw(long accountID, BigDecimal fubnds) {
-        updateBalance(accountID, fubnds.negate());
+    private Account lockRow(long accountId) {
+        Account locked = accountDAO.getAccountForTransaction(accountId);
+        if (locked == null) {
+            throw new RuntimeException("A party is missing");
+        }
+        return locked;
     }
 }

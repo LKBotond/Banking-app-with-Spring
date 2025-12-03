@@ -1,7 +1,6 @@
 package com.banking.backend.dto.transaction;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransferDTO {
-    Long id;
-    Long fromId;
-    Long toId;
+    String sessionToken;
+    Long sender;
+    Long receiver;
     BigDecimal sum;
-    OffsetDateTime moment;
 }

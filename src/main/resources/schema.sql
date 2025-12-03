@@ -11,15 +11,21 @@ DROP TABLE IF EXISTS accounts CASCADE;
 
 DROP TABLE IF EXISTS master_record CASCADE;
 
-DROP TYPE IF EXISTS transaction_type;
+DROP TABLE IF EXISTS active_sessions CASCADE;
+
+DROP TYPE IF EXISTS transaction_type CASCADE;
+
+DROP TYPE IF EXISTS user_status CASCADE;
 
 -- ============================
 -- Necessary enums and types
 -- ============================
 
--- Enum for different types of transactions
+-- Necessary enums for tables
 
 CREATE TYPE transaction_type AS ENUM ('DEPOSIT', 'WITHDRAWAL', 'TRANSFER');
+
+CREATE TYPE user_status AS ENUM ('ACTIVE', 'SUSPENDED', 'DELETED');
 
 --TABLES START HERE:
 
@@ -30,12 +36,14 @@ CREATE TYPE transaction_type AS ENUM ('DEPOSIT', 'WITHDRAWAL', 'TRANSFER');
 CREATE TABLE
     users (
         user_id BIGINT GENERATED ALWAYS AS IDENTITY,
-        email TEXT,
+        email TEXT UNIQUE,
         name_encrypted TEXT, -- encrypted version of the user's full name
         salt TEXT,           -- used for password hashing
         iv TEXT,             -- initialization vector for name_encrypted
         pass_hash TEXT,      -- hashed password
+        status user_status NOT NULL DEFAULT 'ACTIVE',
         registered TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        deleted_at TIMESTAMPTZ,
         CONSTRAINT pk_users PRIMARY KEY (user_id)
     );
 
@@ -58,6 +66,7 @@ CREATE TABLE
         id BIGINT GENERATED ALWAYS AS IDENTITY,
         user_id BIGINT,
         funds NUMERIC(20, 2) DEFAULT 0,
+        status user_status NOT NULL DEFAULT 'ACTIVE',
         CONSTRAINT pk_accounts PRIMARY KEY (id),
         CONSTRAINT fk_accounts_users FOREIGN KEY (user_id) REFERENCES users (user_id)
     );
@@ -66,6 +75,7 @@ COMMENT ON TABLE accounts IS 'Stores financial account data for users.';
 COMMENT ON COLUMN accounts.user_id IS 'Reference to the owning user.';
 COMMENT ON COLUMN accounts.funds IS 'Current balance of the account.';
 
+CREATE INDEX idx_account ON accounts (id);
 CREATE INDEX idx_user ON accounts (user_id);
 
 -- ============================
@@ -76,7 +86,6 @@ CREATE TABLE
     logins (
         id BIGINT GENERATED ALWAYS AS IDENTITY,
         user_id BIGINT,
-        status BOOLEAN, -- true = active session, false = logged out
         login_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         logout_time TIMESTAMPTZ,
         CONSTRAINT pk_session_users PRIMARY KEY (id),
@@ -85,7 +94,6 @@ CREATE TABLE
 
 
 COMMENT ON TABLE logins IS 'Tracks user login and logout sessions.';
-COMMENT ON COLUMN logins.status IS 'Indicates if the session is still active.';
 COMMENT ON COLUMN logins.login_time IS 'Timestamp of login.';
 COMMENT ON COLUMN logins.logout_time IS 'Timestamp of logout (nullable).';
 

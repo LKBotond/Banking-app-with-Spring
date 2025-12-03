@@ -3,5 +3,6 @@ SELECT
 FROM
     accounts
 WHERE
-    id IN (?, ?) FOR
+    id = ?
+    AND status = 'ACTIVE' FOR
 UPDATE;

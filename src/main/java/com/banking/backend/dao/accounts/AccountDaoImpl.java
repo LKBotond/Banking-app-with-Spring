@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.backend.dao.BaseDaoImpl;
 import com.banking.backend.dbAccess.DBQueries;
@@ -16,7 +15,6 @@ import com.banking.backend.domain.accounts.Account;
 import com.banking.backend.exceptions.DataBaseAccessException;
 
 @Repository
-@Transactional
 public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
 
     public AccountDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -24,8 +22,9 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
     }
 
     @Override
-    public void create(long userID) {
-        updateDB(DBQueries.CREATE_ACCOUNT, userID);
+    public Account create(long userID) {
+        return getSingleRow(DBQueries.CREATE_ACCOUNT, accountRowMapper(), userID)
+                .orElseThrow(() -> new DataBaseAccessException("no access to the db", null));
     }
 
     @Override
@@ -58,24 +57,18 @@ public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
     }
 
     @Override
-    public List<Account> lockAndGetDataForTransaction(long sender, long receiver) {
-        Optional<List<Account>> potentialAccounts = getResultList(DBQueries.LOCK_FOR_TRANSACTION, accountRowMapper(),
-                sender, receiver);
-        if (potentialAccounts.isEmpty()) {
-            throw new DataBaseAccessException("Missing data for transaction between ids: " + sender + " " + receiver,
-                    null);
+    public Account getAccountForTransaction(long accountId) {
+        Optional<Account> potentialAccount = getSingleRow(DBQueries.LOCK_FOR_TRANSACTION, accountRowMapper(),
+                accountId);
+        if (potentialAccount.isEmpty()) {
+            throw new DataBaseAccessException("No Such account in db", null);
         }
-        List<Account> accounts = potentialAccounts.get();
-        if (accounts.size() != 2) {
-            throw new DataBaseAccessException("Too many or too few accounts for the query", null);
-        }
-        return accounts;
-
+        return potentialAccount.get();
     }
 
     private RowMapper<Account> accountRowMapper() {
         return (rs, _) -> new Account(
                 rs.getLong("id"),
-                rs.getBigDecimal("fund"));
+                rs.getBigDecimal("funds"));
     }
 }

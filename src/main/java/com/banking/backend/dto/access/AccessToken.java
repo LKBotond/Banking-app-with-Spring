@@ -1,9 +1,5 @@
 package com.banking.backend.dto.access;
 
-import java.util.ArrayList;
-
-import com.banking.backend.domain.accounts.Account;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -22,8 +18,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AccessToken {
-    String SessionToken;
+    String sessionToken;
     String name;
     String familyName;
-    ArrayList<Account> accounts;
 }

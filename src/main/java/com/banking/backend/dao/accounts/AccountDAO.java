@@ -8,7 +8,7 @@ import com.banking.backend.domain.accounts.Account;
 
 public interface AccountDAO {
 
-    void create(long userID);
+    Account create(long userID);
 
     Optional<Account> getFundsbyAccountID(long accountID);
 
@@ -20,6 +20,6 @@ public interface AccountDAO {
 
     void updateFundsForAccount(BigDecimal funds, long accountID);
 
-    List<Account> lockAndGetDataForTransaction(long sender, long receiver);
+    Account getAccountForTransaction(long accountId);
 
 }

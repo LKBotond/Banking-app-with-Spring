@@ -1,0 +1,4 @@
+mvnw text eol=lf
+*.cmd text eol=crlf
+src/main/resources/static/js/** linguist-vendored=false
+src/main/resources/static/pages/** linguist-vendored=false

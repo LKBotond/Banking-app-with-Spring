@@ -1,7 +1,14 @@
 # Architecture:
+This file holds flow charts and sequence diagrams for the mos important logic chains.
+
+## Ledger:
+1. [Login](#login-chain)
+2. [Register](#registration-chain)
+3. [Deletion](#deletion-chain)
+4. [Transaction](#transaction-chain)
 
 ## Login chain:
-
+[Back to Ledger](#ledger)
 ### Abstract :
 
 ```mermaid
@@ -95,6 +102,34 @@ sequenceDiagram
 ```
 
 ## Registration chain
+[Back to Ledger](#ledger)
+### Abstract:
+
+```mermaid
+graph TD
+    subgraph Client
+        A[User Submits Registration Data]
+    end
+
+    subgraph System
+        B{1. Check User Existence}
+        C{2. Secure & Persist User}
+        D[3. Generate Session Token]
+    end
+
+    subgraph Response
+        E[409 Conflict]
+        F[500 Registration Failed]
+        G[200 OK + Session Token]
+    end
+
+    A --> B
+    B -- Email Taken --> E
+    B -- Email Available --> C
+    C -- Creation Failed --> F
+    C -- Success --> D
+    D --> G
+```
 
 ### Implementation:
 
@@ -168,6 +203,34 @@ sequenceDiagram
 ```
 
 ## Deletion chain:
+[Back to Ledger](#ledger)
+### Abstract:
+
+```mermaid
+graph TD
+    subgraph Client
+        A[User Submits Deletion Request]
+    end
+
+    subgraph System
+        B{1. Identify User from Session}
+        C{2. Verify Password}
+        D[3. Delete Accounts & User]
+    end
+
+    subgraph Response
+        E[401 Invalid Session]
+        F[401 Wrong Password]
+        G[200 OK - Deletion Complete]
+    end
+
+    A --> B
+    B -- Session Not Found --> E
+    B -- Session Found --> C
+    C -- Password Mismatch --> F
+    C -- Password Match --> D
+    D --> G
+```
 
 ### Implementation:
 
@@ -282,4 +345,95 @@ sequenceDiagram
         LogoutService-->>LogoutController: throws LoginIdNotFoundException
 
     end
+```
+
+## Transaction chain:
+[Back to Ledger](#ledger)
+### Abstract:
+
+```mermaid
+graph TD
+    subgraph Client
+        A[User Requests Transaction]
+    end
+
+    subgraph System
+        B{"1. Lock Involved Account(s)"}
+        C{"2. Validate Balance Constraints"}
+        D[3. Update Balances & Audit Log]
+    end
+
+    subgraph Response
+        E[404 Account Not Found]
+        F[400 Insufficient Funds]
+        G[200 OK + Updated Account]
+    end
+
+    A --> B
+    B -- Account Missing --> E
+    B -- Acquired Lock --> C
+    C -- Negative Balance --> F
+    C -- Valid --> D
+    D --> G
+```
+
+### Implementation:
+
+```mermaid
+sequenceDiagram
+    participant Controller
+    participant TransactionService
+    participant AccountDAO
+    participant AccountEntity as AccountEntity (Locked)
+    participant MasterRecordDao
+
+    Controller->>TransactionService: transaction(senderID, receiverID, funds)
+    activate TransactionService
+
+    %% Locking Phase
+    Note over TransactionService: 1. LOCK & FETCH ENTITIES
+    
+    TransactionService->>AccountDAO: getAccountForTransaction(minID)
+    activate AccountDAO
+    AccountDAO-->>TransactionService: returns AccountEntity (Sender/Receiver)
+    deactivate AccountDAO
+
+    TransactionService->>AccountDAO: getAccountForTransaction(maxID)
+    activate AccountDAO
+    AccountDAO-->>TransactionService: returns AccountEntity (Receiver/Sender)
+    deactivate AccountDAO
+
+    alt One or Both Accounts Missing
+        TransactionService-->>Controller: throw RuntimeException("Party missing")
+    else Both Entities Retrieved
+        
+        %% Validation Phase (Using the entities we just locked)
+        Note over TransactionService: 2. CHECK FUNDS ON LOCKED ENTITY
+        
+        TransactionService->>AccountEntity: sender.getBalance()
+        activate AccountEntity
+        AccountEntity-->>TransactionService: returns currentBalance
+        deactivate AccountEntity
+
+        alt Insufficient Funds (currentBalance < funds)
+            TransactionService-->>Controller: throw RuntimeException("Insufficient funds")
+        else Funds Available
+            
+            %% Persistence Phase
+            Note over TransactionService: 3. UPDATE DB RECORDS
+            TransactionService->>AccountDAO: updateFundsForAccount(newSenderBal, senderID)
+            TransactionService->>AccountDAO: updateFundsForAccount(newReceiverBal, receiverID)
+            TransactionService->>MasterRecordDao: recordTransfer(senderID, receiverID, funds)
+            
+            %% In-Memory Update Phase
+            Note over TransactionService: 4. UPDATE IN-MEMORY SENDER ENTITY
+            TransactionService->>AccountEntity: sender.subtractFromFunds(funds)
+            activate AccountEntity
+            AccountEntity-->>TransactionService: (void)
+            deactivate AccountEntity
+            
+            TransactionService-->>Controller: return SenderAccount
+        end
+    end
+    deactivate TransactionService
 ```

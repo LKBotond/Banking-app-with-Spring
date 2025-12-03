@@ -1,5 +1,6 @@
 package com.banking.backend.services.access;
 
+
 //Spring Specific
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,8 @@ import com.banking.backend.services.session.SessionService;
 import lombok.AllArgsConstructor;
 import javax.crypto.SecretKey;
 import java.util.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @AllArgsConstructor
@@ -35,10 +38,13 @@ public class RegistrationService {
     private final UsersDao usersDao;
     private final LoginDao loginDao;
 
+    private static final Logger log = LoggerFactory.getLogger(RegistrationService.class);
+
     @Transactional
     public AccessToken register(RegisterRequestDTO request) {
-
-        if(checkForExistingUser(request)){
+        log.info("got registration request");
+        if (checkForExistingUser(request)) {
+            log.info("User is already in the database");
             throw new UserAlreadyExistsException("Email is taken");
         }
 
@@ -51,6 +57,7 @@ public class RegistrationService {
             Long userId = createUserInDb(request, encryptedName, salt, iv, passHash);
             Long loginId = createLoginEntry(userId);
             AccessToken accessToken = createAccessToken(request, loginId);
+            log.info("returning access token");
             return accessToken;
         } finally {
             authenticationService.wipeSensitiveMemory(salt, iv, request.getPassword());
@@ -86,7 +93,7 @@ public class RegistrationService {
 
     private AccessToken createAccessToken(RegisterRequestDTO registerRequest, Long loginId) {
         AccessToken accessToken = new AccessToken(null, registerRequest.getFirstName(),
-                registerRequest.getLastName(), null);
+                registerRequest.getLastName());
         this.sessionService.createSessionToken(accessToken, loginId);
         return accessToken;
     }

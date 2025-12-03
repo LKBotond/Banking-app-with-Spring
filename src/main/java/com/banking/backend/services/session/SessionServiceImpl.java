@@ -1,9 +1,12 @@
 package com.banking.backend.services.session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.banking.backend.dao.sessions.ActiveSessionsDao;
 import com.banking.backend.dto.access.AccessToken;
+import com.banking.backend.exceptions.InvalidSessionException;
 import com.banking.backend.services.security.Argon2KDF;
 
 import lombok.AllArgsConstructor;
@@ -16,20 +19,23 @@ public class SessionServiceImpl implements SessionService {
     private final Argon2KDF argon2KDF;
     private static final int TOKEN_BYTES = 32;
     private final SessionCache sessionCache;
+    private static final Logger log = LoggerFactory.getLogger(SessionServiceImpl.class);
 
-    public boolean validateSession(String sessionToken) {
+    public void validateSession(String sessionToken) {
+        log.info("Session validation reached");
         if (sessionToken == null || sessionToken.isBlank()) {
-            return false;
+            log.info("invalid session");
+            throw new InvalidSessionException();
         }
-        if (sessionCache.getSession(sessionToken) != null) {
-            return true;
-        }
-        Long loginId = lookupInDataBase(sessionToken);
-        if (loginId != null) {
+        if (sessionCache.getSession(sessionToken) == null) {
+            log.info("Session not in cache");
+            Long loginId = lookupInDataBase(sessionToken);
+            log.info("session found in db, updating cache");
             updateCache(sessionToken, loginId);
-            return true;
+
+        } else {
+            log.info("Session validated from cache: {}", sessionToken);
         }
-        return false;
     }
 
     public void createSessionToken(AccessToken incompleteAccessToken, long loginId) {
@@ -44,13 +50,18 @@ public class SessionServiceImpl implements SessionService {
         this.sessionDao.deleteActiveSession(sessionToken);
     }
 
+    public Long getUserIdBySession(String sessionToken) {
+        return sessionDao.getUserIdbySessionId(sessionToken).orElseThrow(InvalidSessionException::new);
+    }
+
     private String createSessionString() {
-        return Base64.getEncoder().encodeToString(this.argon2KDF.getRandom(TOKEN_BYTES));
+        return Base64.getUrlEncoder().encodeToString(this.argon2KDF.getRandom(TOKEN_BYTES));
     }
 
     private Long lookupInDataBase(String sessionToken) {
-        return this.sessionDao.getUsersLoginId(sessionToken).orElse(null);
+        return this.sessionDao.getUsersLoginId(sessionToken).orElseThrow(InvalidSessionException::new);
     }
+
     private void updateCache(String sessionToken, Long loginId) {
         this.sessionCache.addSession(sessionToken, loginId);
     }

@@ -98,6 +98,8 @@ public abstract class BaseDaoImpl {
     protected <T> Optional<T> getSingleRow(String sql, RowMapper<T> rowMapper, Object... params) {
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, params));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         } catch (DataAccessException e) {
             throw new DataBaseAccessException("Failed to fetch single row", e);
         }
