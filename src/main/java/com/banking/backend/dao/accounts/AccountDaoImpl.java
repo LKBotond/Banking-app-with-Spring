@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.backend.dao.BaseDaoImpl;
 import com.banking.backend.dbAccess.DBQueries;
@@ -16,7 +15,6 @@ import com.banking.backend.domain.accounts.Account;
 import com.banking.backend.exceptions.DataBaseAccessException;
 
 @Repository
-@Transactional
 public class AccountDaoImpl extends BaseDaoImpl implements AccountDAO {
 
     public AccountDaoImpl(JdbcTemplate jdbcTemplate) {

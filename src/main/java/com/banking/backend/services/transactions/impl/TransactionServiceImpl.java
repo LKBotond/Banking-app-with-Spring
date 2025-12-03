@@ -11,7 +11,6 @@ import com.banking.backend.domain.accounts.Account;
 import com.banking.backend.services.transactions.TransactionService;
 
 @Service
-@Transactional
 public class TransactionServiceImpl implements TransactionService {
     private final AccountDAO accountDAO;
     private final MasterRecordDao masterRecordDao;
@@ -22,6 +21,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional
     public Account transaction(long senderID, long receiverID, BigDecimal funds) {
         long first = Math.min(senderID, receiverID);
         long second = Math.max(senderID, receiverID);
@@ -40,6 +40,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional
     public Account deposit(long accountID, BigDecimal funds) {
         Account locked = lockRow(accountID);
         updateBalance(locked, funds);
@@ -49,6 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional
     public Account withdraw(long accountID, BigDecimal funds) {
         Account locked = lockRow(accountID);
         updateBalance(locked, funds.negate());
