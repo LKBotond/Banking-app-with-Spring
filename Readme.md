@@ -2,18 +2,18 @@
 
 ## TLDR
 
-This is project is a fullstack banking application that supports full user lifecycle management, including user creation, deactivation/deletion, authentication (login/logout), and multi-account functionality.
+This project is a fullstack banking application that supports full user lifecycle management, including user creation, deactivation/deletion, authentication (login/logout), and multi-account functionality.
 
 It can simulate deposits, withdrawals, and transfers, all of which are logged in a local PostgreSQL database to ensure data persistence while the server is running.
 
 The project implements custom authentication, password hashing, encryption logic, and session management because I’m fascinated by cybersecurity and wanted to learn how such systems are built at a low level on the backend.
 (In production, you should use Spring Security.)
 
-It uses optimized manual SQL queries, loaded from the JAR into public static final strings and executed using Spring’s JDBC Template, ensuring fast, efficient, and fully traceable queries.
+It uses optimized manual SQL queries, stored in external .sql resource files and loaded into memory at application startup. This keeps the Java logic clean while allowing for complex, fully traceable SQL execution via Spring’s JDBC Template.
 
 Architecturally, the project follows the Separation of Concerns principle and uses a clear DAO → Service → Controller structure.
 
-On the frontend I've used plain js for
+On the frontend I've used plain js for building and rendering the dynamically created accounts.
 
 ## Installation guide:
 
